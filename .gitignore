@@ -26,3 +26,8 @@ out/
 ### Configurações de Segurança e Logs ###
 *.log
 .env
+
+*.jpg
+*.png
+*.webp
+img/
