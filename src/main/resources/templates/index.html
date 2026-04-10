@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{:: #conteudo-index}, ~{:: #estilos-index}, ~{:: #scripts-index})}">
+<head>
+    <meta charset="UTF-8">
+    <th:block id="estilos-index">
+        <link rel="stylesheet" th:href="@{/css/index.css}">
+    </th:block>
+</head>
+<body>
+	<div id="conteudo-index">
+        <div id="carouselExample" class="carousel slide full-screen-carousel" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://picsum.photos/1600/600?random=1" class="d-block w-100" alt="Imagem 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://picsum.photos/1600/600?random=2" class="d-block w-100" alt="Imagem 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://picsum.photos/1600/600?random=3" class="d-block w-100" alt="Imagem 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <div class="container mt-5">
+            <div class="row mb-4 text-center">
+                <div class="titulo">
+                    <h2 class="section-title">Nossas Criações</h2>
+                    <p class="section-subtitle">Peças únicas acabaram de chegar. Seja o primeiro a descobrir nossas novidades</p>
+                </div>
+            </div>
+
+            <div class="products-grid">
+                <th:block th:if="${!produto.empty}">
+                    <a th:href="@{'/produto/' + ${p.id}}" class="product-card" th:each="p : ${produto}">
+                        <div class="product-image-container">
+                            <img th:if="${p.imagens != null and !p.imagens.empty}"
+                                 th:src="@{'/img/produto_img/' + ${p.imagens[0]}}" alt="Produto">
+                            <img th:unless="${p.imagens != null and !p.imagens.empty}"
+                                 src="/img/sem-imagem.jpg" alt="Sem Imagem">
+                        </div>
+                        
+                        <div class="product-details">
+                            <h3 class="qp-product-title" th:text="${p.titulo}">Título</h3>
+                            
+                            <p class="qp-product-desc" th:text="${p.descricao}">Descrição...</p>
+
+                            <div class="qp-footer-card">
+                                <p class="qp-price">
+                                    <small>R$</small> <span th:text="${#numbers.formatDecimal(p.preco, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                                </p>
+                                <div class="qp-btn-primary">Ver detalhes</div>
+                            </div>
+                        </div>
+                    </a>
+                </th:block>
+            </div>
+        </div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+HELP.md
+target/
+bin/
+out/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS / Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+*.launch
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### Configurações de Segurança e Logs ###
+*.log
+.env

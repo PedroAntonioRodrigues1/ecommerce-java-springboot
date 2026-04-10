@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{:: #conteudo-cadastro}, ~{:: #estilos-cadastro}, ~{:: #scripts-cadastro})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro Admin - Conexão dos Retalhos</title>
+    
+    <th:block id="estilos-cadastro">
+        <link rel="stylesheet" th:href="@{/css/formularios.css}">
+        <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    </th:block>
+</head>
+<body class="auth-page">
+
+    <div id="conteudo-cadastro">
+        <section data-aos="zoom-in" data-aos-duration="800">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="auth-card">
+                            <form th:action="@{/admin/save-admin}" method="post">
+
+                                <h3 class="section-title-auth">Adicionar Administrador</h3>
+                                
+                                <div class="mb-3">
+                                    <th:block th:if="${session.succMsg}">
+                                        <p class="text-success fw-bold text-center">[[${session.succMsg}]]</p>
+                                        <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                                    </th:block>
+
+                                    <th:block th:if="${session.errorMsg}">
+                                        <p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+                                        <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                                    </th:block>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label-auth" for="nome">Nome Completo:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text auth-icon"><i class="fas fa-user"></i></span>
+                                        <input type="text" id="nome" name="nome" class="form-control auth-input" placeholder="Nome do Admin" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label-auth" for="loginEmail">E-mail:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text auth-icon"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" id="loginEmail" name="loginEmail" class="form-control auth-input" placeholder="email@adm.com" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label-auth" for="telefone">Telefone:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text auth-icon"><i class="fas fa-phone"></i></span>
+                                        <input type="tel" id="telefone" name="telefone" class="form-control auth-input" placeholder="(99) 99999-9999" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label-auth" for="senha">Senha:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text auth-icon"><i class="fas fa-lock"></i></span>
+                                            <input type="password" id="senha" name="senha" class="form-control auth-input" placeholder="Senha" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label-auth" for="confirmarSenha">Repita a Senha:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text auth-icon"><i class="fas fa-lock"></i></span>
+                                            <input type="password" id="confirmarSenha" name="confirmarSenha" class="form-control auth-input" placeholder="Repita a senha" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-auth btn-lg">
+                                        <i class="fas fa-user-check me-2"></i>Criar Conta Admin
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <th:block id="scripts-cadastro">
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            AOS.init({
+                duration : 1000,
+                once : true
+            });
+        </script>
+    </th:block> 
+
+</body>
+</html>

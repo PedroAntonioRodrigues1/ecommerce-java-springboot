@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+/* Container da dashboard */
+.admin-container {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+/* Cabeçalho da dashboard */
+.admin-header {
+	text-align: center;
+	margin-bottom: 3rem;
+}
+
+.admin-header-title {
+	font-size: 2.5rem;
+	font-weight: bold;
+}
+
+.admin-header-subtitle {
+	font-size: 1.25rem;
+}
+/* Colunas específicas para os cards */
+.col-admin {
+	margin-bottom: 1.5rem;
+}
+/* Link que envolve o card para torná-lo totalmente clicável */
+.admin-card-link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+/* Card customizado */
+.card-admin {
+	height: 100%;
+	transition: box-shadow 0.3s;
+	cursor: pointer;
+}
+
+.card-admin:hover {
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+}
+/* Corpo do card */
+.card-body-admin {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+/* Estilos para os ícones dentro dos cards */
+.admin-icon {
+	font-size: 3rem;
+	color: #007bff;
+	margin-bottom: 15px;
+}
+/* Título dentro do card */
+.admin-card-title {
+	margin-bottom: 0.75rem;
+}
+/* Texto dentro do card */
+.admin-card-text {
+	flex-grow: 1;
+}

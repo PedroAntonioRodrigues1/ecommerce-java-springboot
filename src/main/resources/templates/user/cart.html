@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: Layout(~{:: #conteudo-cart}, ~{:: #estilos-cart}, ~{:: #scripts-cart})}">
+<head>
+    <meta charset="UTF-8">
+    <th:block id="estilos-cart">
+        <link rel="stylesheet" th:href="@{/css/carrinho.css}">
+    </th:block>
+</head>
+<body class="meuCarrinho-body">
+   <div id="conteudo-cart">
+    <div class="container py-5">
+        <div class="meuCarrinho-header">
+            <h1><i class="fas fa-shopping-bag"></i> Meu Carrinho</h1>
+            <p>Peças exclusivas selecionadas para você.</p>
+        </div>
+
+        <div th:if="${session.succMsg}" class="alert alert-success border-0 shadow-sm text-center mb-4">
+            <i class="fas fa-check-circle"></i> [[${session.succMsg}]]
+            <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="meuCarrinho-cardItens">
+                    <div class="meuCarrinho-cardHeader">
+                        <h5 class="meuCarrinho-cardTitulo">Itens Selecionados</h5>
+                        <span class="badge rounded-pill bg-dark">[[${carts.size()}]] unidades</span>
+                    </div>
+
+                    <ul class="meuCarrinho-listaProdutos" th:unless="${#lists.isEmpty(carts)}">
+                        <li th:each="cart : ${carts}">
+                            <div class="meuCarrinho-produto">
+                                <div class="meuCarrinho-produtoImagem">
+                                    <img th:src="${cart.produto.imagens != null and !cart.produto.imagens.empty} ? @{'/img/produto_img/' + ${cart.produto.imagens[0]}} : '/img/sem-imagem.jpg'">
+                                </div>
+                                <div class="meuCarrinho-produtoDetalhes">
+                                    <h6 class="meuCarrinho-produtoNome">[[${cart.produto.titulo}]]</h6>
+                                    <p class="meuCarrinho-produtoPreco">R$ [[${#numbers.formatDecimal(cart.produto.preco, 1, 'POINT', 2, 'COMMA')}]]</p>
+                                </div>
+                                <div class="meuCarrinho-produtoAcoes">
+                                    <a th:href="@{'/user/carrinhoDelete?cid='+ ${cart.id}}" class="meuCarrinho-botaoRemover btn-confirmar"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="meuCarrinho-vazio" th:if="${#lists.isEmpty(carts)}">
+                        <p class="mb-4 text-muted">Seu carrinho está vazio.</p>
+                        <a th:href="@{/produtos}" class="btn-voltar-loja">Voltar à Loja</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="meuCarrinho-resumoCard">
+                    <h5 class="meuCarrinho-resumoTitulo">Resumo</h5>
+                    <div class="meuCarrinho-resumoLinha"><span>Produtos</span><span>R$ [[${#numbers.formatDecimal(totalCarrinho, 1, 'POINT', 2, 'COMMA')}]]</span></div>
+                    <div class="meuCarrinho-resumoTotal"><span>Total</span><span>R$ [[${#numbers.formatDecimal(totalCarrinho, 1, 'POINT', 2, 'COMMA')}]]</span></div>
+                    <a th:unless="${#lists.isEmpty(carts)}" th:href="@{/user/orders}" class="meuCarrinho-botaoFinalizar">Finalizar Compra</a>
+                </div>
+            </div>
+        </div>
+    </div>
+   </div>
+
+   <th:block id="scripts-cart">
+        <script>
+            document.querySelectorAll('.btn-confirmar').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    if (!confirm('Deseja remover esta peça do seu carrinho?')) e.preventDefault();
+                });
+            });
+        </script>
+   </th:block>
+</body>
+</html>

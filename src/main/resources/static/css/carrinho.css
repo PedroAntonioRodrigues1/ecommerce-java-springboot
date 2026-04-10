@@ -1,0 +1,273 @@
+@charset "UTF-8";
+
+/* Paleta de Cores Definida */
+:root {
+    --marrom-cafe: #4E342E;
+    --marrom-medio: #795548;
+    --amarelo-girassol: #FFD54F;
+    --ouro-amber: #FFB300;
+    --branco: #ffffff;
+    --borda-suave: #e0e0e0;
+}
+
+body.meuCarrinho-body {
+    background-color: #faf8f5; /* Fundo levemente creme para destacar os cards brancos */
+}
+
+.meuCarrinho-containerPrincipal {
+    padding-bottom: 3rem;
+}
+
+.meuCarrinho-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.meuCarrinho-header h1 {
+    font-weight: 800;
+    color: var(--marrom-cafe);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.meuCarrinho-header p {
+    color: var(--marrom-medio);
+    font-size: 1.1rem;
+}
+
+/* -----------------------------------------
+   CARD DE ITENS SELECIONADOS
+----------------------------------------- */
+.meuCarrinho-cardItens {
+    background-color: var(--branco);
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(78, 52, 46, 0.05);
+    overflow: hidden;
+}
+
+.meuCarrinho-cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--borda-suave);
+    background-color: #fdfdfd; 
+}
+
+.meuCarrinho-cardTitulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--marrom-cafe);
+    margin: 0;
+}
+
+/* Reset da lista (Isso causava o visual quebrado) */
+.meuCarrinho-listaProdutos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estrutura Flexbox do Produto */
+.meuCarrinho-produto {
+    display: flex;
+    align-items: center; /* Alinha tudo verticalmente no meio */
+    gap: 20px;
+    padding: 1.5rem;
+    border-bottom: 1px solid #f2f2f2;
+    transition: background 0.2s;
+}
+
+.meuCarrinho-produto:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.meuCarrinho-produto:hover {
+    background-color: #fffaf0; /* Hover super suave puxado pro amarelo */
+}
+
+.meuCarrinho-produtoImagem img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--borda-suave);
+}
+
+.meuCarrinho-produtoDetalhes {
+    flex-grow: 1; /* Faz os detalhes ocuparem o espaço vazio e empurrar a lixeira pro canto */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meuCarrinho-produtoNome {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--marrom-cafe);
+    margin: 0;
+}
+
+.meuCarrinho-produtoPreco {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--marrom-medio);
+    margin: 0;
+}
+
+/* Botão de Remover Moderno */
+.meuCarrinho-botaoRemover {
+    color: #cc0000;
+    background-color: #fff0f0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.meuCarrinho-botaoRemover:hover {
+    background-color: #cc0000;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* Estado Vazio */
+.meuCarrinho-vazio {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.btn-voltar-loja {
+    background-color: var(--marrom-medio);
+    color: var(--branco);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s;
+    display: inline-block;
+}
+
+.btn-voltar-loja:hover {
+    background-color: var(--marrom-cafe);
+    color: var(--branco);
+}
+
+/* -----------------------------------------
+   CARD DE RESUMO
+----------------------------------------- */
+.meuCarrinho-resumoCard {
+    background-color: var(--branco);
+    border-radius: 12px;
+    border: 1px solid var(--borda-suave);
+    padding: 1.8rem;
+    box-shadow: 0 4px 15px rgba(78, 52, 46, 0.05);
+    position: sticky;
+    top: 20px;
+}
+
+.meuCarrinho-resumoTitulo {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--marrom-cafe);
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+.meuCarrinho-resumoLinha {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: var(--marrom-medio);
+    font-weight: 500;
+}
+
+.meuCarrinho-resumoTotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--marrom-cafe);
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--borda-suave);
+}
+
+/* Botão Finalizar Compra */
+.meuCarrinho-botaoFinalizar {
+    width: 100%;
+    background: linear-gradient(45deg, var(--amarelo-girassol), var(--ouro-amber));
+    color: var(--marrom-cafe);
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: all 0.3s ease;
+    display: block;
+    text-decoration: none;
+    border: 2px dashed rgba(255, 255, 255, 0.6);
+}
+
+.meuCarrinho-botaoFinalizar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(255, 179, 0, 0.3);
+    color: white;
+}
+
+/* -----------------------------------------
+   RESPONSIVIDADE (MOBILE)
+----------------------------------------- */
+@media (max-width: 768px) {
+    /* No celular, o card de resumo perde o efeito sticky e desce naturalmente */
+    .meuCarrinho-resumoCard {
+        position: static;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .meuCarrinho-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .meuCarrinho-cardHeader {
+        padding: 1rem;
+    }
+
+    /* Reduz o espaçamento e ajusta o layout do item no celular */
+    .meuCarrinho-produto {
+        padding: 1rem;
+        gap: 12px;
+    }
+
+    .meuCarrinho-produtoImagem img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .meuCarrinho-produtoNome {
+        font-size: 1rem;
+    }
+
+    .meuCarrinho-produtoPreco {
+        font-size: 1.05rem;
+    }
+
+    /* Lixeira um pouco menor e mais discreta no mobile */
+    .meuCarrinho-botaoRemover {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+}

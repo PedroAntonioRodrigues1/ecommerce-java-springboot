@@ -1,0 +1,143 @@
+@charset "UTF-8";
+
+body.auth-page {
+  background-color: #f8f8f8;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Container do formulário (card) – estilo sutil com bordas finas */
+.auth-card {
+  background: #fff;
+  padding: 2rem;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
+  border-radius: 8px;
+}
+
+/* Títulos de seção */
+.section-title-auth {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.section-title-auth::after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0.5rem auto 0;
+}
+
+/* Rótulos dos Inputs */
+.form-label.auth-label {
+  color: #666;
+  font-weight: normal;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+/* Inputs e controles do formulário */
+.form-control.auth-input {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-control.auth-input:focus {
+  border-color: #999;
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.05);
+}
+
+/* Ícones dentro dos grupos de input */
+.input-group-text.auth-icon {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #666;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+/* Botão de Ação (login/cadastro) */
+.btn-auth {
+   background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #4E342E;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.5);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.btn-auth:hover {
+  background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #fff;
+    border-style: solid;
+}
+
+/* =========================================
+   Estilos para o Formulário de Produtos
+   ========================================= */
+
+/* Container geral da imagem para definir o tamanho da "caixa" */
+.addProduto-image-preview-container {
+  width: 100%;
+  height: 250px; /* Altura fixa para alinhar todos os cards perfeitamente */
+  background-color: #f8f9fa;
+  border: 2px dashed #ced4da;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Container interno da pré-visualização */
+.addProduto-image-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+/* Aqui está a mágica: a imagem NUNCA vai ultrapassar 
+  o container e vai manter a proporção original 
+*/
+.addProduto-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Usa 'cover' se quiser que preencha toda a caixa cortando bordas */
+  border-radius: 4px;
+}
+
+/* Ícone de placeholder (quando não tem imagem) */
+.addProduto-image-preview i {
+  font-size: 4rem;
+  color: #adb5bd;
+}
+
+/* Efeito ao passar o mouse por cima do container de upload */
+.addProduto-image-preview-container:hover {
+  background-color: #e9ecef;
+  border-color: #6c757d;
+}
+
+/* Asterisco de campo obrigatório (caso já não tenha) */
+.addProduto-required-field::after {
+  content: " *";
+  color: #dc3545;
+  font-weight: bold;
+}

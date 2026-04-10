@@ -1,0 +1,1081 @@
+ <!DOCTYPE html>
+
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+
+th:replace="~{base :: Layout(~{:: #conteudo-order}, ~{:: #estilos-order}, ~{:: #scripts-order})}">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Finalizar Pedido - Quintal Arte & Retalhos</title>
+
+<link rel="stylesheet" href="/css/auth.css">
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+
+<th:block id="estilos-order">
+
+<link rel="stylesheet" th:href="@{/css/stepper-forms.css}">
+
+</th:block>
+
+</head>
+
+<body>
+
+<div class="order" id="conteudo-order">
+
+<div class="fundo-retalhos" id="fundoRetalhos"></div>
+
+<section data-aos="zoom-in" data-aos-duration="800">
+
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-md-11 col-lg-10">
+
+<div class="auth-card">
+
+<h2 class="text-center mb-4">Finalizar Pedido</h2>
+
+
+
+<div id="stepper-wizard"
+
+class="d-flex justify-content-between mb-5">
+
+<div class="step active" data-step="1">
+
+<div class="step-circle">1</div>
+
+<div class="step-label">ENTREGA</div>
+
+<div class="step-sublabel">Endereço e envio</div>
+
+</div>
+
+<div class="step" data-step="2">
+
+<div class="step-circle">2</div>
+
+<div class="step-label">PAGAMENTO</div>
+
+<div class="step-sublabel">Método e dados</div>
+
+</div>
+
+<div class="step" data-step="3">
+
+<div class="step-circle">
+
+<i class="fas fa-check"></i>
+
+</div>
+
+<div class="step-label">COMPROVANTE</div>
+
+<div class="step-sublabel">Confirmação</div>
+
+</div>
+
+</div>
+
+
+
+<form th:action="@{/user/save-order}" method="post"
+
+id="order-form" novalidate>
+
+
+
+<div class="step-content active" data-step="1">
+
+<div class="row">
+
+<div class="col-md-12">
+
+<h4 class="mb-3">Seus Dados</h4>
+
+<div class="mb-3">
+
+<label class="form-label-auth" for="nomeCompleto">Nome
+
+Completo:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-user"></i></span> <input type="text"
+
+class="form-control auth-input" id="nomeCompleto"
+
+name="nomeCompleto" placeholder="Seu nome completo"
+
+required th:value="${user != null ? user.nome : ''}">
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label-auth" for="cpf">CPF:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-id-card"></i></span> <input type="text"
+
+class="form-control auth-input" id="cpf" name="cpf"
+
+placeholder="000.000.000-00" required>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label-auth" for="telefone">Telefone:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"> <i
+
+class="fas fa-phone"></i>
+
+</span> <input type="tel" id="telefone" name="telefone"
+
+class="form-control auth-input"
+
+placeholder="(99) 99999-9999" required
+
+th:value="${user != null ? user.telefone : ''}">
+
+</div>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label-auth" for="email">E-mail:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"> <i
+
+class="fas fa-envelope"></i>
+
+</span> <input type="email" id="email" name="email"
+
+class="form-control auth-input"
+
+placeholder="seu@email.com" required
+
+th:value="${user != null ? user.loginEmail : ''}">
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<hr class="my-4">
+
+
+
+<th:block th:if="${not #lists.isEmpty(enderecosPerfil)}">
+
+<div class="mb-4 p-3 rounded"
+
+style="background: #fdfbf7; border: 1.5px dashed #D4C8B8;">
+
+<label class="form-label-auth"> <i
+
+class="fas fa-star me-2"></i>Usar um endereço salvo:
+
+</label> <select class="form-select auth-input"
+
+id="enderecoSalvoSelect"
+
+onchange="preencherEnderecoSalvo(this)">
+
+<option value="">Preencher um novo endereço
+
+abaixo...</option>
+
+<option th:each="end : ${enderecosPerfil}"
+
+th:value="${end.cep + '|' + end.endereco + '|' + end.numero + '|' + end.complemento + '|' + end.bairro + '|' + end.cidade + '|' + end.estado}"
+
+th:text="${end.endereco + ', ' + end.numero + ' - ' + end.cidade}">
+
+</option>
+
+</select>
+
+</div>
+
+</th:block>
+
+
+
+<h4 class="mb-3">Endereço de Entrega</h4>
+
+
+
+<div class="mb-3">
+
+<label class="form-label-auth" for="cep">CEP:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-map-marker-alt"></i></span> <input type="text"
+
+class="form-control auth-input" id="cep" name="cep"
+
+placeholder="00000-000" required>
+
+</div>
+
+</div>
+
+
+
+<div class="mb-3">
+
+<label class="form-label-auth" for="endereco">Endereço:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-road"></i></span> <input type="text"
+
+class="form-control auth-input" id="endereco"
+
+name="endereco" placeholder="Rua, Avenida, etc." required>
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+
+<label class="form-label-auth" for="numero">Número:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-hashtag"></i></span> <input type="text"
+
+class="form-control auth-input" id="numero" name="numero"
+
+placeholder="Nº" required>
+
+</div>
+
+</div>
+
+<div class="col-md-8 mb-3">
+
+<label class="form-label-auth" for="complemento">Complemento:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-info-circle"></i></span> <input type="text"
+
+class="form-control auth-input" id="complemento"
+
+name="complemento" placeholder="Apto, bloco, etc.">
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label-auth" for="bairro">Bairro:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-map-signs"></i></span> <input type="text"
+
+class="form-control auth-input" id="bairro" name="bairro"
+
+required>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label-auth" for="cidade">Cidade:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-city"></i></span> <input type="text"
+
+class="form-control auth-input" id="cidade" name="cidade"
+
+required>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="mb-2">
+
+<label class="form-label-auth" for="estado">Estado:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-map"></i></span> <select
+
+class="form-select auth-input" id="estado" name="estado"
+
+required>
+
+<option value="" selected disabled>Selecione</option>
+
+<option value="AC">Acre</option>
+
+<option value="AL">Alagoas</option>
+
+<option value="AP">Amapá</option>
+
+<option value="AM">Amazonas</option>
+
+<option value="BA">Bahia</option>
+
+<option value="CE">Ceará</option>
+
+<option value="DF">Distrito Federal</option>
+
+<option value="ES">Espírito Santo</option>
+
+<option value="GO">Goiás</option>
+
+<option value="MA">Maranhão</option>
+
+<option value="MT">Mato Grosso</option>
+
+<option value="MS">Mato Grosso do Sul</option>
+
+<option value="MG">Minas Gerais</option>
+
+<option value="PA">Pará</option>
+
+<option value="PB">Paraíba</option>
+
+<option value="PR">Paraná</option>
+
+<option value="PE">Pernambuco</option>
+
+<option value="PI">Piauí</option>
+
+<option value="RJ">Rio de Janeiro</option>
+
+<option value="RN">Rio Grande do Norte</option>
+
+<option value="RS">Rio Grande do Sul</option>
+
+<option value="RO">Rondônia</option>
+
+<option value="RR">Roraima</option>
+
+<option value="SC">Santa Catarina</option>
+
+<option value="SP">São Paulo</option>
+
+<option value="SE">Sergipe</option>
+
+<option value="TO">Tocantins</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+
+<div class="form-check mt-4 mb-2 p-3 rounded"
+
+style="background-color: #f8f9fa;">
+
+<input class="form-check-input" type="checkbox"
+
+id="salvarEndereco" name="salvarEndereco" value="true"
+
+style="border-color: #400040; margin-left: -1em; cursor: pointer;">
+
+<label class="form-check-label"
+
+style="color: #400040; font-weight: 600; margin-left: 0.5em; cursor: pointer;"
+
+for="salvarEndereco"> <i
+
+class="fas fa-save me-1 text-warning"></i> Salvar este
+
+endereço para minhas próximas compras
+
+</label>
+
+</div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="step-content" data-step="2">
+
+<div class="row">
+
+<div class="col-md-7">
+
+<h4 class="mb-3">Pagamento</h4>
+
+<p>Escolha a forma de pagamento que preferir.</p>
+
+<div class="mb-4">
+
+<label class="form-label-auth" for="formaPagamento">Forma
+
+de Pagamento:</label>
+
+<div class="input-group">
+
+<span class="input-group-text auth-icon"><i
+
+class="fas fa-credit-card"></i></span> <select
+
+class="form-select auth-input" id="paymentType"
+
+name="paymentType" required>
+
+<option value="" selected disabled>Selecione a
+
+forma de pagamento</option>
+
+<option value="credit_card">Cartão de Crédito</option>
+
+<option value="pix">PIX</option>
+
+<option value="boleto">Boleto Bancário</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-5">
+
+<div class="p-3 rounded" style="background-color: #f8f9fa;">
+
+<h4
+
+class="d-flex justify-content-between align-items-center mb-3">
+
+<span>Resumo do Pedido</span> <span
+
+class="badge bg-primary rounded-pill"
+
+th:text="${#lists.size(cartItems)}">0</span>
+
+</h4>
+
+
+
+<ul class="list-group mb-3">
+
+<li th:each="cart : ${carts}"
+
+class="list-group-item d-flex justify-content-between lh-sm">
+
+<div>
+
+<h6 class="my-0" th:text="${cart.produto.titulo}">Nome
+
+do Produto</h6>
+
+</div> <span class="text-muted"
+
+th:text="${#numbers.formatCurrency(cart.totalPrice)}">R$
+
+0,00</span>
+
+</li>
+
+<li class="list-group-item d-flex justify-content-between">
+
+<span>Subtotal</span> <strong
+
+th:text="${#numbers.formatCurrency(subtotal)}">R$
+
+0,00</strong>
+
+</li>
+
+<li class="list-group-item d-flex justify-content-between">
+
+<span>Frete</span> <strong
+
+th:text="${#numbers.formatCurrency(frete)}">R$
+
+0,00</strong>
+
+</li>
+
+<li
+
+class="list-group-item d-flex justify-content-between fs-5">
+
+<span class="fw-bold">Total (BRL)</span> <strong
+
+class="fw-bold"
+
+th:text="${#numbers.formatCurrency(total)}">R$
+
+0,00</strong>
+
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="step-content" data-step="3">
+
+<div class="text-center p-5">
+
+<i class="fas fa-check-circle text-success"
+
+style="font-size: 80px;"></i>
+
+<h3 class="mt-4">Pedido Realizado com Sucesso!</h3>
+
+<p class="text-muted">
+
+Obrigado por comprar no Quintal Arte & Retalhos. <br> Em
+
+breve você receberá atualizações sobre a entrega do seu
+
+pedido.
+
+</p>
+
+
+
+<div class="mt-4 d-flex justify-content-center gap-2">
+
+<a href="/" class="btn btn-primary"> <i
+
+class="fas fa-home me-2"></i> Home
+
+</a> <a href="/user/user-orders"
+
+class="btn btn-outline-secondary"> <i
+
+class="fas fa-list-alt me-2"></i> Meus Pedidos
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<div
+
+class="stepper-navigation mt-5 d-flex justify-content-between">
+
+<button type="button" class="btn-voltar" id="prev-btn"
+
+style="display: none;">
+
+<i class="fas fa-arrow-left me-2"></i>Anterior
+
+</button>
+
+
+
+<div id="spacer" style="flex-grow: 1;"></div>
+
+
+
+<button type="button" class="btn-girassol" id="next-btn">
+
+Próximo Passo <i class="fas fa-arrow-right ms-2"></i>
+
+</button>
+
+<button type="submit" class="btn-girassol" id="submit-btn"
+
+style="display: none;">
+
+<i class="fas fa-check-circle me-2"></i>Finalizar Pedido
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+</div>
+
+<th:block id="scripts-order">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+
+AOS.init({
+
+duration: 1000,
+
+once: true
+
+});
+
+
+
+// --- FUNÇÃO PARA PREENCHER ENDEREÇO SALVO ---
+
+function preencherEnderecoSalvo(select) {
+
+if(!select.value) {
+
+// Limpa os campos se ele escolher "Preencher novo endereço..."
+
+['cep', 'endereco', 'numero', 'complemento', 'bairro', 'cidade', 'estado'].forEach(id => document.getElementById(id).value = '');
+
+return;
+
+}
+
+
+// Divide a string montada no th:value
+
+const dados = select.value.split('|');
+
+document.getElementById('cep').value = dados[0];
+
+document.getElementById('endereco').value = dados[1];
+
+document.getElementById('numero').value = dados[2];
+
+document.getElementById('complemento').value = (dados[3] === 'null' || dados[3] === '') ? '' : dados[3];
+
+document.getElementById('bairro').value = dados[4];
+
+document.getElementById('cidade').value = dados[5];
+
+document.getElementById('estado').value = dados[6];
+
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+// --- LÓGICA DA API VIACEP ---
+
+const cepInput = document.getElementById('cep');
+
+cepInput.addEventListener('blur', function () {
+
+const cep = this.value.replace(/\D/g, '');
+
+if (cep.length !== 8) return;
+
+
+
+const fieldsToFill = ['endereco', 'bairro', 'cidade', 'estado'];
+
+fieldsToFill.forEach(id => {
+
+const el = document.getElementById(id);
+
+el.value = 'Buscando...';
+
+el.disabled = true;
+
+});
+
+
+
+fetch(`https://viacep.com.br/ws/${cep}/json/`)
+
+.then(response => response.json())
+
+.then(data => {
+
+if (data.erro) {
+
+alert('CEP não encontrado.');
+
+fieldsToFill.forEach(id => document.getElementById(id).value = '');
+
+} else {
+
+document.getElementById('endereco').value = data.logradouro;
+
+document.getElementById('bairro').value = data.bairro;
+
+document.getElementById('cidade').value = data.localidade;
+
+document.getElementById('estado').value = data.uf;
+
+document.getElementById('numero').focus();
+
+
+// Limpa os erros de validação após a API preencher
+
+if (typeof window.jQuery !== 'undefined' && typeof $('#endereco').valid === "function") {
+
+$('#endereco, #bairro, #cidade, #estado').valid();
+
+}
+
+}
+
+})
+
+.catch(error => {
+
+console.error('Erro ao buscar o CEP:', error);
+
+alert('Não foi possível buscar o CEP. Verifique sua conexão.');
+
+})
+
+.finally(() => {
+
+fieldsToFill.forEach(id => document.getElementById(id).disabled = false);
+
+});
+
+});
+
+
+
+// --- LÓGICA DO WIZARD/STEPPER ---
+
+const steps = document.querySelectorAll('.step');
+
+const stepContents = document.querySelectorAll('.step-content');
+
+const prevBtn = document.getElementById('prev-btn');
+
+const nextBtn = document.getElementById('next-btn');
+
+const submitBtn = document.getElementById('submit-btn');
+
+const form = document.getElementById('order-form');
+
+
+
+let currentStep = 1;
+
+
+
+function updateWizard() {
+
+steps.forEach((step, index) => {
+
+const stepNum = index + 1;
+
+if (stepNum < currentStep) {
+
+step.classList.add('completed');
+
+step.classList.remove('active');
+
+} else if (stepNum === currentStep) {
+
+step.classList.add('active');
+
+step.classList.remove('completed');
+
+} else {
+
+step.classList.remove('active', 'completed');
+
+}
+
+});
+
+
+
+stepContents.forEach(content => {
+
+content.classList.remove('active');
+
+if (parseInt(content.dataset.step) === currentStep) {
+
+content.classList.add('active');
+
+}
+
+});
+
+
+
+prevBtn.style.display = currentStep > 1 && currentStep <= 2 ? 'inline-block' : 'none';
+
+nextBtn.style.display = currentStep < 2 ? 'inline-block' : 'none';
+
+submitBtn.style.display = currentStep === 2 ? 'inline-block' : 'none';
+
+
+
+if (currentStep === 3) {
+
+prevBtn.style.display = 'none';
+
+nextBtn.style.display = 'none';
+
+submitBtn.style.display = 'none';
+
+}
+
+}
+
+
+
+// --- LÓGICA DO BOTÃO PRÓXIMO ---
+
+nextBtn.addEventListener('click', () => {
+
+let isValid = true;
+
+const currentInputs = document.querySelectorAll('.step-content.active input[required], .step-content.active select[required]');
+
+
+
+currentInputs.forEach(input => {
+
+if (typeof window.jQuery !== 'undefined' && typeof $(input).valid === "function") {
+
+if (!$(input).valid()) {
+
+isValid = false;
+
+}
+
+} else {
+
+if (!input.checkValidity()) {
+
+input.reportValidity();
+
+isValid = false;
+
+}
+
+}
+
+});
+
+
+
+if (isValid && currentStep < steps.length) {
+
+currentStep++;
+
+updateWizard();
+
+}
+
+});
+
+
+
+// --- LÓGICA DO BOTÃO ANTERIOR ---
+
+prevBtn.addEventListener('click', () => {
+
+if (currentStep > 1) {
+
+currentStep--;
+
+updateWizard();
+
+}
+
+});
+
+
+
+// --- LÓGICA DO ENVIO DO FORMULÁRIO ---
+
+form.addEventListener('submit', function (e) {
+
+e.preventDefault();
+
+
+
+let isValid = true;
+
+const currentInputs = document.querySelectorAll('.step-content.active input[required], .step-content.active select[required]');
+
+
+currentInputs.forEach(input => {
+
+if (typeof window.jQuery !== 'undefined' && typeof $(input).valid === "function") {
+
+if (!$(input).valid()) {
+
+isValid = false;
+
+}
+
+}
+
+});
+
+
+
+if (!isValid) return;
+
+
+
+submitBtn.disabled = true;
+
+submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processando...';
+
+
+
+const formData = new FormData(form);
+
+
+
+fetch(form.action, {
+
+method: form.method,
+
+body: formData
+
+})
+
+.then(response => {
+
+if (response.ok) {
+
+currentStep = 3;
+
+updateWizard();
+
+} else {
+
+alert('Houve um erro ao processar seu pedido. Tente novamente.');
+
+submitBtn.disabled = false;
+
+submitBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Finalizar Pedido';
+
+}
+
+})
+
+.catch(error => {
+
+console.error('Erro de rede:', error);
+
+alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
+
+submitBtn.disabled = false;
+
+submitBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Finalizar Pedido';
+
+});
+
+});
+
+
+
+updateWizard();
+
+});
+
+</script>
+</th:block>
+
+
+
+</body>
+
+</html>

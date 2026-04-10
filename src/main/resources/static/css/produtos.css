@@ -1,0 +1,238 @@
+@charset "UTF-8";
+
+/* ======= Seção Produtos ======= */
+.qp-produtos {
+	padding: 4rem 1rem;
+}
+
+.qp-produtos .qp-title {
+	font-weight: 300;
+	color: #5D4037;
+	font-size: 1.5rem;
+	text-align: center;
+	margin-bottom: 3rem;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ======================================================== */
+/* CARDS DE PRODUTO - ESTILO DO PRIMEIRO ARQUIVO            */
+/* ======================================================== */
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    padding: 2rem 0;
+}
+
+/* O Card: Agora como um link funcional */
+.products-grid .product-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.products-grid .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(78, 52, 46, 0.12);
+    border-color: #D4C8B8;
+}
+
+/* Imagem quadrada e profissional */
+.products-grid .product-image-container {
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background: #f8f8f8;
+}
+
+.products-grid .product-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.products-grid .product-card:hover .product-image-container img {
+    transform: scale(1.06);
+}
+
+/* Conteúdo interno */
+.products-grid .product-details {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align:center;
+}
+
+.products-grid .qp-product-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #400040; /* Marrom Café */
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.products-grid .qp-product-desc {
+    font-size: 0.95rem;
+    color: #400040; /* Marrom Suave */
+    margin-bottom: 15px;
+    line-height: 1.4;
+    
+    /* Mágica das 2 linhas fixas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.7rem; 
+}
+
+/* Rodapé alinhado */
+.qp-footer-card {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.products-grid .qp-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color:#5D4037;/* Terracota Vibrante */
+    margin: 0;
+}
+
+/* Botão menor e rústico */
+.products-grid .qp-btn-primary {
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #4E342E;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.5);
+    text-align: center;
+    transition: 0.3s;
+}
+
+/* O botão reage ao passar o mouse no card */
+.products-grid .product-card:hover .qp-btn-primary {
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #fff;
+    border-style: solid;
+}
+
+/* ======= Responsividade (Padrão do 1º arquivo) ======= */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+  .product-details { padding: 12px; }
+  
+  .carousel-inner img {
+        height: 250px; 
+    }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr; /* 1 produto por linha conforme o 1º arquivo */
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  .qp-product-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* ============================================================ */
+/* BUSCA, NAVBAR E PAGINAÇÃO (Mantidos do seu 2º arquivo)       */
+/* ============================================================ */
+
+body .navbar {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    z-index: 1050; 
+}
+
+.qp-search-extension {
+    background: linear-gradient(45deg, #fff333, #ffce33);
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: -90px;
+    padding-top: 110px;
+    padding-bottom: 2rem;
+    position: relative;
+    z-index: 1000;
+}
+
+.search-capsule {
+    position: relative;
+    width: 100%;
+}
+
+.search-capsule .search-input {
+    width: 100%;
+    height: 55px;
+    border-radius: 50px;
+    border: none;
+    padding-left: 25px;
+    padding-right: 60px;
+    font-size: 1.1rem;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    color: #5d5b29;
+}
+
+.search-capsule .search-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #5d5b29;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* Paginação */
+nav[aria-label="Page navigation"] {
+    margin-top: 4rem;
+    margin-bottom: 3rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.qp-pagination .page-link {
+    color: #5D4037;
+    border: 1px solid #e8e8e8;
+    background-color: #fff;
+    margin: 0 4px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.qp-pagination .active .page-link {
+    background-color: #5D4037;
+    color: #fff;
+    border-color: #5D4037;
+}
+
+ 

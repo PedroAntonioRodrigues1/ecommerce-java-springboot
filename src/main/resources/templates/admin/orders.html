@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{:: #conteudo-order}, ~{:: #estilos-pedido}, ~{})}">
+<head>
+<meta charset="UTF-8">
+<title>Pedidos - Quintal Arte & Retalhos</title>
+
+<th:block id="estilos-pedido">
+	<link rel="stylesheet" th:href="@{/css/verProdutoadm.css}">
+</th:block>
+</head>
+<body>
+
+	<div id="conteudo-order" class="adminVerProduto-container">
+		<div class="container py-4">
+
+			<h2 class="order-title"
+				style="text-align: center; margin-bottom: 4rem;">Pedidos</h2>
+
+			<th:block th:if="${session.succMsg}">
+				<p class="text-success fw-bold" style="text-align: center;">[[${session.succMsg}]]</p>
+				<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+			</th:block>
+
+			<th:block th:if="${session.errorMsg}">
+				<p class="text-danger fw-bold" style="text-align: center;">[[${session.errorMsg}]]</p>
+				<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+			</th:block>
+
+			<div
+				th:if="${#lists.isEmpty(orders) and orderDtls == null and !srch}"
+				class="no-orders-container text-center py-5">
+				<div class="no-orders">
+					<i class="fas fa-shopping-bag"
+						style="font-size: 48px; color: var(--admin-primary-color);"></i>
+					<p class="mt-3">Nenhum pedido feito.</p>
+				</div>
+			</div>
+
+			<div class="adminVerProduto-card"
+				th:if="${(not #lists.isEmpty(orders)) or orderDtls != null or (srch and searchTerm != null)}">
+				<div class="adminVerProduto-card-header">
+					<div class="adminVerProduto-title">Pedidos</div>
+
+					<span class="badge bg-primary ms-3"
+						th:if="${totalElements != null}"> Total:
+						[[${totalElements}]] pedidos <span th:if="${searchTerm != null}">
+							para "<strong>[[${searchTerm}]]</strong>"
+					</span>
+					</span>
+
+					<form th:action="@{/admin/search-order}" method="get"
+						class="search-capsule ms-auto">
+						<div class="adminVerProduto-search-bar" style="max-width: 320px;">
+							<input type="search" placeholder="Buscar por pedido..."
+								name="orderId" th:value="${searchTerm}" />
+							<button type="submit" class="btn btn-primary ms-2">
+								<i class="fas fa-search"></i>
+							</button>
+							<a th:if="${searchTerm != null}" th:href="@{/admin/orders}"
+								class="btn btn-secondary ms-2"> Limpar </a>
+						</div>
+					</form>
+				</div>
+
+				<div class="adminVerProduto-card-body table-responsive">
+
+					<div
+						th:if="${#lists.isEmpty(orders) and orderDtls == null and srch and searchTerm != null}"
+						class="text-center text-muted py-4">
+						<i class="fas fa-search fa-2x mb-3"></i><br>
+						<p>
+							Nenhum pedido encontrado para "<strong>[[${searchTerm}]]</strong>"
+						</p>
+						<a th:href="@{/admin/orders}" class="btn btn-link">Ver todos
+							os pedidos</a>
+					</div>
+
+					<table class="adminVerProduto-table"
+						style="width: 100%; border-collapse: collapse;"
+						th:if="${not #lists.isEmpty(orders) or orderDtls != null}">
+						<thead>
+							<tr>
+								<th style="text-align: left;">Pedido</th>
+								<th style="text-align: left;">Detalhes da entrega</th>
+								<th style="text-align: left;">Data</th>
+								<th style="text-align: left;">Produtos</th>
+								<th style="text-align: right;">Total do Pedido</th>
+								<th style="text-align: center;">Status</th>
+								<th style="text-align: center;">Ações</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<th:block th:if="${srch}">
+								<th:block th:if="${orderDtls != null}">
+									<tr>
+										<td data-label="Pedido"
+											style="vertical-align: middle; white-space: nowrap;"><span
+											class="order-id" th:text="${'#' + orderDtls.orderId}">#10045</span>
+										</td>
+
+										<td data-label="Detalhes da entrega"
+											style="vertical-align: middle; max-width: 260px; padding-right: 8px;">
+											<div
+												style="font-size: 0.92rem; color: var(--admin-text-dark); display: flex; flex-direction: column; gap: 2px;">
+												<div
+													style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+													th:text="${orderDtls.adress != null ? orderDtls.adress.nomeCompleto : '—'}">Nome
+													Cliente</div>
+
+												<div
+													style="color: #6c757d; font-size: 0.85rem; display: flex; gap: 8px; flex-wrap: wrap;">
+													<span
+														th:text="${orderDtls.adress != null ? orderDtls.adress.telefone : '—'}">(00)
+														00000-0000</span> <span
+														th:text="${orderDtls.adress != null ? orderDtls.adress.estado : ''}">Estado</span>
+													<span
+														th:text="${orderDtls.adress != null ? orderDtls.adress.cidade : ''}">Cidade</span>
+												</div>
+
+												<div
+													style="font-size: 0.85rem; color: #495057; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+													<span style="font-weight: 600; margin-right: 6px;">Endereço:</span>
+													<span
+														th:text="${orderDtls.adress != null ? orderDtls.adress.endereco : '—'}">Logradouro...</span>
+												</div>
+											</div>
+										</td>
+
+										<td data-label="Data"
+											style="vertical-align: middle; white-space: nowrap;"><span
+											class="order-date"
+											th:text="${#temporals.format(orderDtls.orderDate, 'dd/MM/yyyy HH:mm')}">15/10/2025</span>
+										</td>
+
+										<td data-label="Produtos" style="vertical-align: middle;">
+											<div th:each="item : ${orderDtls.items}"
+												style="margin-bottom: 4px; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px;">
+												<div class="product-title" style="font-size: 0.9rem;"
+													th:text="${item.produto.titulo}">Nome</div>
+												<div class="text-muted" style="font-size: 0.8rem;"
+													th:text="${'R$ ' + #numbers.formatDecimal(item.priceSnapshot, 1, 'POINT', 2, 'COMMA')}">R$
+													0,00</div>
+											</div>
+										</td>
+
+										<td data-label="Total do Pedido"
+											style="text-align: right; vertical-align: middle; white-space: nowrap;">
+											<span class="price-value"
+											th:text="${'R$ ' + #numbers.formatDecimal(orderDtls.totalOrderPrice, 1, 'POINT', 2, 'COMMA')}">R$
+												0,00</span>
+										</td>
+
+										<td data-label="Status"
+											style="text-align: center; vertical-align: middle;"><span
+											class="status-badge" th:text="${orderDtls.status}"> </span></td>
+
+										<td data-label="Ações"
+											style="text-align: center; vertical-align: middle;">
+											<form th:action="@{/admin/update-status}" method="post"
+												th:object="${orderDtls}" style="display: inline-block;">
+												<input type="hidden" name="id" th:value="${orderDtls.id}" />
+												<select name="st" onchange="this.form.submit()"
+													style="padding: 7px 10px; border-radius: 6px; border: 1px solid #ddd; background: #fff; min-width: 180px; font-size: 0.95rem;">
+
+													<option
+														th:each="statusEnum : ${T(com.retalho.vendas.util.OrderStatus).values()}"
+														th:value="${statusEnum.id}" th:text="${statusEnum.name}"
+														th:selected="${pedido.status == statusEnum.name}">
+													</option>
+
+												</select>
+											</form>
+										</td>
+									</tr>
+								</th:block>
+
+								<th:block
+									th:if="${orderDtls == null and not #lists.isEmpty(orders)}">
+									<tr th:each="pedido : ${orders}">
+										<td data-label="Pedido"
+											style="vertical-align: middle; white-space: nowrap;"><span
+											class="order-id" th:text="${'#' + pedido.orderId}">#10045</span>
+										</td>
+
+										<td data-label="Detalhes da entrega"
+											style="vertical-align: middle; max-width: 260px; padding-right: 8px;">
+											<div
+												style="font-size: 0.92rem; color: var(--admin-text-dark); display: flex; flex-direction: column; gap: 2px;">
+												<div
+													style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+													th:text="${pedido.adress != null ? pedido.adress.nomeCompleto : '—'}">Nome
+													Cliente</div>
+
+												<div
+													style="color: #6c757d; font-size: 0.85rem; display: flex; gap: 8px; flex-wrap: wrap;">
+													<span
+														th:text="${pedido.adress != null ? pedido.adress.telefone : '—'}">(00)
+														00000-0000</span> <span
+														th:text="${pedido.adress != null ? pedido.adress.estado : ''}">Estado</span>
+													<span
+														th:text="${pedido.adress != null ? pedido.adress.cidade : ''}">Cidade</span>
+												</div>
+
+												<div
+													style="font-size: 0.85rem; color: #495057; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+													<span style="font-weight: 600; margin-right: 6px;">Endereço:</span>
+													<span
+														th:text="${pedido.adress != null ? pedido.adress.endereco : '—'}">Logradouro...</span>
+												</div>
+											</div>
+										</td>
+
+										<td data-label="Data"
+											style="vertical-align: middle; white-space: nowrap;"><span
+											class="order-date"
+											th:text="${#temporals.format(pedido.orderDate, 'dd/MM/yyyy HH:mm')}">15/10/2025</span>
+										</td>
+
+										<td data-label="Produtos" style="vertical-align: middle;">
+											<div th:each="item : ${pedido.items}"
+												style="margin-bottom: 4px; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px;">
+												<div class="product-title" style="font-size: 0.9rem;"
+													th:text="${item.produto.titulo}">Nome</div>
+												<div class="text-muted" style="font-size: 0.8rem;"
+													th:text="${'R$ ' + #numbers.formatDecimal(item.priceSnapshot, 1, 'POINT', 2, 'COMMA')}">R$
+													0,00</div>
+											</div>
+										</td>
+
+										<td data-label="Total do Pedido"
+											style="text-align: right; vertical-align: middle; white-space: nowrap;">
+											<span class="price-value"
+											th:text="${'R$ ' + #numbers.formatDecimal(pedido.totalOrderPrice, 1, 'POINT', 2, 'COMMA')}">R$
+												0,00</span>
+										</td>
+
+										<td data-label="Status"
+											style="text-align: center; vertical-align: middle;"><span
+											class="status-badge" th:text="${pedido.status}"> </span></td>
+
+										<td data-label="Ações"
+											style="text-align: center; vertical-align: middle;">
+											<form th:action="@{/admin/update-status}" method="post"
+												th:object="${pedido}" style="display: inline-block;">
+												<input type="hidden" name="id" th:value="${pedido.id}" /> <select
+													name="st" onchange="this.form.submit()"
+													style="padding: 7px 10px; border-radius: 6px; border: 1px solid #ddd; background: #fff; min-width: 180px; font-size: 0.95rem;">
+													<option th:value="1"
+														th:selected="${pedido.status == 'Em progresso...'}">Em
+														progresso...</option>
+													<option th:value="2"
+														th:selected="${pedido.status == 'Pedido Recebido'}">Pedido
+														Recebido</option>
+													<option th:value="3"
+														th:selected="${pedido.status == 'Produto pronto para envio'}">Produto
+														pronto para envio</option>
+													<option th:value="4"
+														th:selected="${pedido.status == 'Saiu para entrega'}">Saiu
+														para entrega</option>
+													<option th:value="5"
+														th:selected="${pedido.status == 'Entrega Realizada'}">Entrega
+														Realizada</option>
+													<option th:value="6"
+														th:selected="${pedido.status == 'Pedido Cancelado'}">Pedido
+														Cancelado</option>
+												</select>
+											</form>
+										</td>
+									</tr>
+								</th:block>
+							</th:block>
+
+							<th:block th:unless="${srch}">
+								<tr th:each="pedido : ${orders}">
+									<td data-label="Pedido"
+										style="vertical-align: middle; white-space: nowrap;"><span
+										class="order-id" th:text="${'#' + pedido.orderId}">#10045</span>
+									</td>
+
+									<td data-label="Detalhes da entrega"
+										style="vertical-align: middle; max-width: 260px; padding-right: 8px;">
+										<div
+											style="font-size: 0.92rem; color: var(--admin-text-dark); display: flex; flex-direction: column; gap: 2px;">
+											<div
+												style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+												th:text="${pedido.adress != null ? pedido.adress.nomeCompleto : '—'}">Nome
+												Cliente</div>
+
+											<div
+												style="color: #6c757d; font-size: 0.85rem; display: flex; gap: 8px; flex-wrap: wrap;">
+												<span
+													th:text="${pedido.adress != null ? pedido.adress.telefone : '—'}">(00)
+													00000-0000</span> <span
+													th:text="${pedido.adress != null ? pedido.adress.estado : ''}">Estado</span>
+												<span
+													th:text="${pedido.adress != null ? pedido.adress.cidade : ''}">Cidade</span>
+											</div>
+
+											<div
+												style="font-size: 0.85rem; color: #495057; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+												<span style="font-weight: 600; margin-right: 6px;">Endereço:</span>
+												<span
+													th:text="${pedido.adress != null ? pedido.adress.endereco : '—'}">Logradouro...</span>
+											</div>
+										</div>
+									</td>
+
+									<td data-label="Data"
+										style="vertical-align: middle; white-space: nowrap;"><span
+										class="order-date"
+										th:text="${#temporals.format(pedido.orderDate, 'dd/MM/yyyy HH:mm')}">15/10/2025</span>
+									</td>
+
+									<td data-label="Produtos" style="vertical-align: middle;">
+										<div th:each="item : ${pedido.items}"
+											style="margin-bottom: 4px; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px;">
+											<div class="product-title" style="font-size: 0.9rem;"
+												th:text="${item.produto.titulo}">Nome</div>
+											<div class="text-muted" style="font-size: 0.8rem;"
+												th:text="${'R$ ' + #numbers.formatDecimal(item.priceSnapshot, 1, 'POINT', 2, 'COMMA')}">R$
+												0,00</div>
+										</div>
+									</td>
+
+									<td data-label="Total do Pedido"
+										style="text-align: right; vertical-align: middle; white-space: nowrap;">
+										<span class="price-value"
+										th:text="${'R$ ' + #numbers.formatDecimal(pedido.totalOrderPrice, 1, 'POINT', 2, 'COMMA')}">R$
+											0,00</span>
+									</td>
+
+									<td data-label="Status"
+										style="text-align: center; vertical-align: middle;"><span
+										class="status-badge" th:text="${pedido.status}"> </span></td>
+
+									<td data-label="Ações"
+										style="text-align: center; vertical-align: middle;">
+										<form th:action="@{/admin/update-status}" method="post"
+											th:object="${pedido}" style="display: inline-block;">
+											<input type="hidden" name="id" th:value="${pedido.id}" /> <select
+												name="st" onchange="this.form.submit()"
+												style="padding: 7px 10px; border-radius: 6px; border: 1px solid #ddd; background: #fff; min-width: 180px; font-size: 0.95rem;">
+												<option th:value="1"
+													th:selected="${pedido.status == 'Em progresso...'}">Em
+													progresso...</option>
+												<option th:value="2"
+													th:selected="${pedido.status == 'Pedido Recebido'}">Pedido
+													Recebido</option>
+												<option th:value="3"
+													th:selected="${pedido.status == 'Produto pronto para envio'}">Produto
+													pronto para envio</option>
+												<option th:value="4"
+													th:selected="${pedido.status == 'Saiu para entrega'}">Saiu
+													para entrega</option>
+												<option th:value="5"
+													th:selected="${pedido.status == 'Entrega Realizada'}">Entrega
+													Realizada</option>
+												<option th:value="6"
+													th:selected="${pedido.status == 'Pedido Cancelado'}">Pedido
+													Cancelado</option>
+											</select>
+										</form>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+
+					<nav aria-label="Page navigation"
+						th:if="${totalPages > 1 and orderDtls == null}">
+						<ul class="pagination justify-content-center qp-pagination mt-4">
+							<li class="page-item" th:classappend="${isFirst} ? 'disabled'">
+								<a class="page-link"
+								th:href="@{${srch} ? 
+								   '/admin/search-order?orderId=' + ${searchTerm} + '&pageNo=' + ${pageNo - 1} + '&pageSize=' + ${pageSize} : 
+								   '/admin/orders?pageNo=' + ${pageNo - 1} + '&pageSize=' + ${pageSize}}"
+								aria-label="Anterior"> &laquo; </a>
+							</li>
+
+							<li class="page-item"
+								th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+								th:classappend="${pageNo == i} ? 'active'"><a
+								class="page-link"
+								th:href="@{${srch} ? 
+								   '/admin/search-order?orderId=' + ${searchTerm} + '&pageNo=' + ${i} + '&pageSize=' + ${pageSize} : 
+								   '/admin/orders?pageNo=' + ${i} + '&pageSize=' + ${pageSize}}"
+								th:text="${i + 1}"> 1 </a></li>
+
+							<li class="page-item" th:classappend="${isLast} ? 'disabled'">
+								<a class="page-link"
+								th:href="@{${srch} ? 
+								   '/admin/search-order?orderId=' + ${searchTerm} + '&pageNo=' + ${pageNo + 1} + '&pageSize=' + ${pageSize} : 
+								   '/admin/orders?pageNo=' + ${pageNo + 1} + '&pageSize=' + ${pageSize}}"
+								aria-label="Próximo"> &raquo; </a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

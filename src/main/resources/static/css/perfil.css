@@ -1,0 +1,212 @@
+@charset "UTF-8";
+
+/* ============================================= */
+/* VARIÁVEIS DE CORES (IDENTIDADE QUINTAL)       */
+/* ============================================= */
+:root {
+    --marrom-cafe: #4E342E;
+    --marrom-medio: #795548;
+    --amarelo-girassol: #FFD54F;
+    --ouro-amber: #FFB300;
+    --verde-salvia: #81B29A; /* Faltava essa! */
+    --verde-salvia-escuro: #6A9681; /* Faltava essa! */
+    --branco: #ffffff;
+    --borda-suave: #D4C8B8;
+    --fundo-input: #fcfcfc;
+}
+
+/* Container principal */
+.profile-container {
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+/* ======== ESTILO "CARD" PARA A SIDEBAR E CONTEÚDO ======== */
+.profile-sidebar, .profile-content {
+    background: var(--branco);
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.profile-sidebar:hover, .profile-content:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(78, 52, 46, 0.12);
+    border-color: var(--borda-suave);
+}
+
+/* ======== AVATAR E USUÁRIO (AMARELO GIRASSOL) ======== */
+.profile-user .profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--amarelo-girassol), var(--ouro-amber));
+    color: var(--marrom-cafe); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 auto;
+    border: 2px dashed rgba(255, 255, 255, 0.6);
+    box-shadow: 2px 2px 0px var(--borda-suave);
+}
+
+.profile-user .profile-name {
+    color: var(--marrom-cafe);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+/* ======== NAVEGAÇÃO DA SIDEBAR ======== */
+.profile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--marrom-medio);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.profile-nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.profile-nav-link:hover {
+    background-color: #f8f8f8;
+    color: var(--marrom-cafe);
+}
+
+.profile-nav-link.active {
+    background: linear-gradient(45deg, var(--amarelo-girassol), var(--ouro-amber));
+    color: var(--marrom-cafe);
+    box-shadow: 2px 2px 0px var(--borda-suave);
+}
+
+.profile-nav-link.text-danger:hover {
+    background-color: #fff0f0;
+    color: #dc3545 !important;
+}
+
+/* ======== TIPOGRAFIA DO CONTEÚDO ======== */
+.section-title {
+    color: var(--marrom-cafe);
+    font-weight: 800;
+    font-size: 1.6rem;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+}
+
+.section-description {
+    color: var(--marrom-medio);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+.profile-divider {
+    border-top: 1px solid var(--borda-suave);
+    opacity: 0.6;
+}
+
+/* ======== FORMULÁRIOS ======== */
+.form-label {
+    font-weight: 700;
+    color: var(--marrom-cafe);
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profile-input {
+    border-radius: 8px;
+    border: 1.5px solid var(--borda-suave);
+    padding: 12px 15px;
+    color: var(--marrom-cafe);
+    transition: all 0.3s ease;
+    background-color: var(--fundo-input);
+    font-weight: 500;
+}
+
+.profile-input:focus {
+    border-color: var(--ouro-amber);
+    box-shadow: 0 0 0 0.2rem rgba(255, 179, 0, 0.15);
+    background-color: var(--branco);
+    outline: none;
+}
+
+/* ======== BOTÕES PROFISSIONAIS ======== */
+
+/* Salvar Alterações - Verde Sálvia */
+.qp-btn-primary {
+    background-color: var(--verde-salvia) !important;
+    color: var(--branco) !important;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    box-shadow: 0 4px 6px rgba(129, 178, 154, 0.2);
+    text-decoration: none;
+}
+
+.qp-btn-primary:hover {
+    background-color: var(--verde-salvia-escuro) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(129, 178, 154, 0.3);
+}
+
+/* Alterar Senha - Marrom Café */
+.btn-alterar-senha {
+    background-color: var(--marrom-cafe) !important;
+    color: var(--branco) !important;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-alterar-senha:hover {
+    background-color: var(--marrom-medio) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(78, 52, 46, 0.2);
+}
+
+/* Responsividade */
+@media (max-width: 991.98px) {
+    .profile-sidebar {
+        margin-bottom: 1.5rem;
+        height: auto;
+    }
+    .profile-content {
+        padding: 2rem !important;
+    }
+}

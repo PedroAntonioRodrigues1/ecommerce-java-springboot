@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" th:fragment="Layout(content, pageStyles, pageScripts)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexão dos Retalhos</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    
+        :root {
+            --cor-terracota: #E07A5F;
+            --cor-azul-profundo: #3D405B;
+            --cor-verde-salvia: #81B29A;
+            --cor-bege-claro: #F2CC8F;
+            --cor-mostarda: #F4D06F;
+            --cor-vinho: #8A5A44;
+            --cor-lavanda: #9B8FAB;
+            --cor-verde-oliva: #6B8E23;
+            --cor-rosa-po: #D8A48F;
+            --cor-azul-petroleo: #3A6B7E;
+        }
+
+        html, body {
+    		font-family: 'Poppins', sans-serif;
+   			background-color: #F9F9F9; /* Um fundo levemente cinza ajuda a destacar os cards brancos */
+            position: relative;
+            z-index: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            
+        }
+
+        .pagina-com-fundo-retalhos .fundo-retalhos {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            opacity: 0.15;
+            pointer-events: none;
+            gap: 8px;
+        }
+
+        .pagina-com-fundo-retalhos .conteudo-principal {
+            position: relative;
+            z-index: 2;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .pagina-com-fundo-retalhos .retalho-miniatura {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .pagina-com-fundo-retalhos .retalho-forma {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pagina-com-fundo-retalhos .forma-interna {
+            position: absolute;
+        }
+
+        /* ======== NAVBAR ======== */
+        .navbar {
+            background: linear-gradient(45deg, #fff333, #ffce33);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #5d5b29 !important;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-right: 2rem;
+        }
+
+        .logo-circular {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .nav-link {
+            color: #5d5b29 !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .dropdown-menu {
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border: none;
+            margin-top: 8px;
+        }
+
+        .nav-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-divider {
+            border-left: 2px solid rgba(93, 91, 41, 0.2);
+            height: 40px;
+            margin: 0 0.5rem;
+        }
+
+        /* ======== FOOTER ======== */
+        .custom-footer {
+            background-color: #5d5b29;
+            color: #ffffff;
+            margin-top: auto;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .custom-footer a {
+            color: #ffce33;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .custom-footer a:hover {
+            color: #fff333;
+        }
+
+        .footer-bottom {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Ajustes para telas menores */
+        @media ( max-width : 991.98px) {
+            .navbar-brand span {
+                display: none;
+            }
+            .nav-divider {
+                display: none;
+            }
+            .dropdown-menu {
+                margin-top: 0;
+                box-shadow: none;
+            }
+            .nav-group {
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .navbar-nav {
+                width: 100%;
+            }
+            .nav-link {
+                justify-content: flex-start; /* Melhor alinhamento no mobile para textos do menu */
+            }
+        }
+    </style>
+    <th:block th:replace="${pageStyles} ?: ~{}"></th:block>
+</head>
+
+<body th:classappend="${paginaComFundoRetalhos} ? 'pagina-com-fundo-retalhos' : ''">
+    
+    <div class="fundo-retalhos" id="fundoRetalhos"></div>
+    <div class="conteudo-principal">
+        
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+
+                <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <a class="navbar-brand me-2" th:href="@{/}"> 
+                    <img th:src="@{/img/retalho-menu.png}" alt="Logo" class="logo-circular">
+                    <span class="d-none d-md-inline">Conexão dos Retalhos</span>
+                </a>
+
+                <div class="offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel" th:text="${user != null ? 'Olá, ' + user.nome : 'Menu'}">Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+                    </div>
+
+                    <div class="offcanvas-body d-flex flex-column">
+                        <ul class="navbar-nav me-lg-auto mb-3 mb-lg-0">
+                            
+                            <th:block th:if="${user == null}">
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-2"></i> Home</a>
+                                </li>
+                            </th:block>
+                            <th:block th:unless="${user == null}">
+                                <li class="nav-item" th:if="${user.role=='ROLE_ADMIN'}">
+                                    <a class="nav-link" th:href="@{/admin/}"><i class="fa-solid fa-house me-2"></i> Home</a>
+                                </li>
+                                <li class="nav-item" th:if="${user.role=='ROLE_USER'}">
+                                    <a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-2"></i> Home</a>
+                                </li>
+                            </th:block> 
+
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/produtos}"> 
+                                    <i class="fa-solid fa-box me-2"></i> Produtos
+                                </a>
+                            </li>
+
+                            <hr class="my-2 d-lg-none">
+                            
+                            <th:block th:if="${user == null}">
+                                <li class="nav-item d-lg-none"><a class="nav-link" th:href="@{/signin}"> <i class="fa-solid fa-right-to-bracket me-2"></i> Login </a></li>
+                                <li class="nav-item d-lg-none"><a class="nav-link" th:href="@{/cadastro}"> <i class="fa-solid fa-user-plus me-2"></i> Registro </a></li>
+                                <li class="nav-item d-lg-none"><a class="nav-link" th:href="@{/user/user-orders}"> <i class="fa-solid fa-shopping-bag me-2"></i> Meus pedidos </a></li>
+                            </th:block>
+
+                            <th:block th:if="${user != null}">
+                                <li class="nav-item d-lg-none" th:if="${user.role=='ROLE_USER'}"><a class="nav-link" th:href="@{/user/profile}"> <i class="fa-solid fa-address-card me-2"></i> Meu Perfil </a></li>
+                                <li class="nav-item d-lg-none" th:if="${user.role=='ROLE_ADMIN'}"><a class="nav-link" th:href="@{/admin/profile}"> <i class="fa-solid fa-address-card me-2"></i> Meu Perfil </a></li>
+                                <li class="nav-item d-lg-none" th:if="${user.role=='ROLE_USER'}"><a class="nav-link" th:href="@{/user/user-orders}"> <i class="fa-solid fa-shopping-bag me-2"></i> Meus Pedidos </a></li>
+                            </th:block>
+
+                        </ul>
+
+                        <th:block th:if="${user != null}">
+                            <div class="mt-auto pt-3 d-lg-none">
+                                <a class="btn btn-danger w-100 text-white" th:href="@{/logout}" style="color: white !important;"> 
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
+                                </a>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+
+                <div class="d-none d-lg-flex align-items-center gap-3 ms-2">
+
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="accountDropdownDesktop" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
+                            <i class="fa-solid fa-user-circle fa-lg me-2"></i> 
+                            <span th:text="${user != null ? user.nome : 'Conta'}">Conta</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdownDesktop">
+                            <th:block th:if="${user == null}">
+                                <li><a class="dropdown-item" th:href="@{/signin}"> <i class="fa-solid fa-right-to-bracket me-2"></i> Login </a></li>
+                                <li><a class="dropdown-item" th:href="@{/cadastro}"> <i class="fa-solid fa-user-plus me-2"></i> Registro </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" th:href="@{/user/user-orders}"> <i class="fa-solid fa-shopping-bag me-2"></i> Meus pedidos </a></li>
+                            </th:block>
+
+                            <th:block th:if="${user != null}">
+                                <li>
+                                    <h6 class="dropdown-header" th:text="'Olá, ' + ${user.nome}">Olá</h6>
+                                </li>
+                                <li th:if="${user.role=='ROLE_USER'}"><a class="dropdown-item" th:href="@{/user/profile}"> <i class="fa-solid fa-address-card me-2"></i> Meu Perfil </a></li>
+                                <li th:if="${user.role=='ROLE_ADMIN'}"><a class="dropdown-item" th:href="@{/admin/profile}"> <i class="fa-solid fa-address-card me-2"></i> Meu Perfil </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" th:href="@{/logout}"> <i class="fa-solid fa-right-from-bracket me-2"></i> Sair </a></li>
+                                <th:block th:if="${user.role=='ROLE_USER'}">
+                                    <li><a class="dropdown-item" th:href="@{/user/user-orders}"> <i class="fa-solid fa-shopping-bag me-2"></i> Meus Pedidos </a></li>
+                                </th:block>
+                            </th:block>
+                        </ul>
+                    </div>
+
+                    <th:block th:if="${user != null and user.role=='ROLE_USER'}">
+                        <a class="nav-link" th:href="@{/user/carrinho}" aria-label="Carrinho de compras"> 
+                            <span class="d-inline-flex align-items-center gap-1">
+                                <i class="fa-solid fa-shopping-cart fa-lg"></i>
+                                <span class="fw-bold fs-5">[ [[${countCart}]] ]</span>
+                            </span>
+                        </a>
+                    </th:block>
+                </div>
+
+                <div class="d-flex d-lg-none align-items-center ms-auto gap-3">
+                    
+                    <th:block th:if="${user == null}">
+                        <a class="nav-link" th:href="@{/signin}" aria-label="Fazer Login">
+                            <i class="fa-solid fa-user-circle fa-lg"></i>
+                        </a> 
+                    </th:block>
+
+                    <th:block th:if="${user != null}">
+                        <a class="nav-link" th:href="${user.role == 'ROLE_ADMIN' ? '/admin/profile' : '/user/profile'}" aria-label="Meu Perfil">
+                            <i class="fa-solid fa-user-circle fa-lg"></i>
+                        </a> 
+                        
+                        <th:block th:if="${user.role=='ROLE_USER'}">
+                            <a class="nav-link" th:href="@{/user/carrinho}" aria-label="Carrinho de compras">
+                                <span class="d-inline-flex align-items-center gap-1">
+                                    <i class="fa-solid fa-shopping-cart fa-lg"></i>
+                                    <span class="fw-bold fs-5">[ [[${countCart}]] ]</span>
+                                </span>
+                            </a>
+                        </th:block>
+                    </th:block>
+
+                </div>
+
+            </div>
+        </nav>
+        
+        <div th:replace="${content}"></div>
+        
+        <footer class="custom-footer pt-5 mt-5">
+            <div class="container text-center text-md-start">
+                <div class="row text-center text-md-left">
+                    
+                    <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                        <h5 class="text-uppercase fw-bold mb-4" style="color: #ffce33;">
+                            <i class="fa-solid fa-puzzle-piece me-2"></i>Conexão dos Retalhos
+                        </h5>
+                        <p>
+                            Unindo pedaços e criando histórias. Encontre os melhores produtos sustentáveis feitos de retalhos, conectando criatividade ao cuidado com o meio ambiente.
+                        </p>
+                    </div>
+
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h5 class="text-uppercase fw-bold mb-4" style="color: #ffce33;">Links Úteis</h5>
+                        <p><a href="/">Início</a></p>
+                        <p><a href="/produtos">Nossos Produtos</a></p>
+                        <p><a href="/cadastro">Criar uma Conta</a></p>
+                        <p><a href="/perfil">Minha Conta</a></p>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h5 class="text-uppercase fw-bold mb-4" style="color: #ffce33;">Contato</h5>
+                        <p><i class="fas fa-home me-3"></i> Brasil</p>
+                        <p><i class="fas fa-envelope me-3"></i> contato@conexaodosretalhos.com</p>
+                        <p><i class="fas fa-phone me-3"></i> (11) 99999-9999</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="footer-bottom text-center p-3 mt-3">
+                © 2026 Copyright:
+                <a class="fw-bold" href="/">Conexão dos Retalhos</a>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <th:block th:replace="${pageScripts} ?: ~{}"></th:block>
+
+    <th:block th:if="${paginaComFundoRetalhos}">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const fundo = document.getElementById('fundoRetalhos');
+                if (!fundo) {
+                    console.error('Elemento #fundoRetalhos não encontrado');
+                    return;
+                }
+
+                const cores = [
+                    '#E07A5F', '#3D405B', '#81B29A', '#F4F1DE', '#F2CC8F',
+                    '#9A031E', '#6D6875', '#606C38', '#E5989B', '#264653'
+                ];
+
+                const patternFactory = [
+                    (container, row, col) => {
+                        const isEvenCell = (row + col) % 2 === 0;
+                        const color1 = cores[(row * 2) % cores.length];
+                        const color2 = cores[(col * 2 + 1) % cores.length];
+                        container.innerHTML = `<div class="forma-interna" style="width: 100%; height: 100%; background: ${isEvenCell ? color1 : color2}; clip-path: ${isEvenCell ? 'polygon(0 0, 100% 0, 0 100%)' : 'polygon(100% 0, 100% 100%, 0 100%)'};"></div>`;
+                    },
+                    (container, row, col) => {
+                        const color1 = cores[row % cores.length];
+                        const color2 = cores[(col + 3) % cores.length];
+                        container.innerHTML = `<div class="forma-interna" style="width: 100%; height: 100%; background: ${color1};"></div><div class="forma-interna" style="width: 60%; height: 60%; background: ${color2}; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>`;
+                    },
+                    (container, row, col) => {
+                      const color1 = cores[(row + col) % cores.length];
+                      const color2 = cores[(row + col + 4) % cores.length];
+                      const angle = (row % 2) ? '135deg' : '45deg';
+                      const thickness = 10; 
+
+                      container.innerHTML = `
+                        <div class="forma-interna" style="
+                          top: 0; left: 0;
+                          width: 100%; height: 100%;
+                          background: ${color1};
+                        "></div>
+                        <div class="forma-interna" style="
+                          top: 0; left: 0;
+                          width: 100%; height: 100%;
+                          background: linear-gradient(
+                            ${angle},
+                            transparent calc(50% - ${thickness}%),
+                            ${color2} calc(50% - ${thickness}%),
+                            ${color2} calc(50% + ${thickness}%),
+                            transparent calc(50% + ${thickness}%)
+                          );
+                        "></div>
+                      `;
+                    },
+                    (container, row, col) => {
+                        const c1 = cores[(row * 3) % cores.length];      
+                        const c2 = cores[(col * 3 + 1) % cores.length];  
+
+                        const quadrados = [
+                            { top: '0%', left: '0%',  color: c1 }, 
+                            { top: '0%', left: '50%', color: c2 }, 
+                            { top: '50%', left: '0%', color: c2 }, 
+                            { top: '50%', left: '50%', color: c1 } 
+                        ];
+
+                        container.innerHTML = quadrados.map(q => `
+                            <div class="forma-interna" style="
+                                position: absolute;
+                                top: ${q.top}; left: ${q.left};
+                                width: 50%; height: 50%;
+                                background: ${q.color};
+                            "></div>
+                        `).join('');
+                    },
+                    (container, row, col) => {
+                        const c1 = cores[(row + col) % cores.length];
+                        const c2 = cores[(row * 3 + col) % cores.length];
+
+                        const triangulos = [
+                            'polygon(50% 50%, 0 0, 50% 0)',       
+                            'polygon(50% 50%, 50% 0, 100% 0)',    
+                            'polygon(50% 50%, 100% 0, 100% 50%)', 
+                            'polygon(50% 50%, 100% 50%, 100% 100%)', 
+                            'polygon(50% 50%, 100% 100%, 50% 100%)', 
+                            'polygon(50% 50%, 50% 100%, 0 100%)',    
+                            'polygon(50% 50%, 0 100%, 0 50%)',       
+                            'polygon(50% 50%, 0 50%, 0 0)'           
+                        ];
+
+                        container.innerHTML = triangulos.map((path, i) => `
+                            <div class="forma-interna" style="
+                                width: 100%; height: 100%;
+                                background: ${i % 2 === 0 ? c1 : c2};
+                                clip-path: ${path};
+                            "></div>
+                        `).join('');
+                    }
+                ];
+
+                const rows = 6, cols = 6;
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        const retalho = document.createElement('div');
+                        retalho.className = 'retalho-miniatura';
+                        const formaContainer = document.createElement('div');
+                        formaContainer.className = 'retalho-forma';
+                        const patternIndex = (row * 2 + col) % patternFactory.length;
+                        patternFactory[patternIndex](formaContainer, row, col);
+                        retalho.appendChild(formaContainer);
+                        fundo.appendChild(retalho);
+                    }
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>

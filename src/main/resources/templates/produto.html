@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: Layout(~{:: #conteudo-produtos}, ~{:: #estilos-produtos}, ~{})}">
+<head>
+<meta charset="UTF-8">
+<title>Produtos - Conexão dos Retalhos</title>
+
+ <th:block id="estilos-produtos">
+    <link rel="stylesheet" th:href="@{/css/produtos.css}">
+ </th:block>
+</head>
+
+<body>
+
+<div id="conteudo-produtos">
+
+	<div class="qp-search-extension">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-8 col-md-10"> 
+					<form th:action="@{/search-product}" method="get" class="search-capsule">
+						<input class="form-control search-input" type="search" 
+							placeholder="O que você procura hoje?" 
+							aria-label="Pesquisar" 
+							name="ch" 
+							th:value="${param.ch}"> 
+						<button class="btn search-btn" type="submit">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="qp-produtos">
+		<div class="container">
+			<h2 class="qp-title">Nosso Catálogo</h2>
+
+			<div class="products-grid">
+			
+		          <th:block th:if="${!produto.empty}">
+                    <a th:href="@{'/produto/' + ${p.id}}" class="product-card" th:each="p : ${produto}">
+                        <div class="product-image-container">
+                            <img th:if="${p.imagens != null and !p.imagens.empty}"
+                                 th:src="@{'/img/produto_img/' + ${p.imagens[0]}}" alt="Produto">
+                            <img th:unless="${p.imagens != null and !p.imagens.empty}"
+                                 src="/img/sem-imagem.jpg" alt="Sem Imagem">
+                        </div>
+                        
+                        <div class="product-details">
+                            <h3 class="qp-product-title" th:text="${p.titulo}">Título</h3>
+                            
+                            <p class="qp-product-desc" th:text="${p.descricao}">Descrição...</p>
+
+                            <div class="qp-footer-card">
+                                <p class="qp-price">
+                                    <small>R$</small> <span th:text="${#numbers.formatDecimal(p.preco, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                                </p>
+                                <div class="qp-btn-primary">Ver detalhes</div>
+                            </div>
+                        </div>
+                    </a>
+                </th:block>
+			</div>
+
+			<th:block th:if="${produto.empty}">
+				<div class="empty-state-container text-center">
+					<i class="fas fa-box-open empty-state-icon"></i>
+					
+					<div th:if="${param.ch != null}">
+						<h4 class="text-muted mb-3">
+							Nenhum produto encontrado para "<strong>[[${param.ch}]]</strong>"
+						</h4>
+						<a th:href="@{/produtos}" class="btn btn-outline-secondary mt-2 rounded-pill px-4">Limpar busca</a>
+					</div>
+					
+					<div th:if="${param.ch == null}">
+						<h4 class="text-muted">Nenhum produto disponível no momento.</h4>
+						<p class="text-secondary">Volte mais tarde para conferir novidades!</p>
+					</div>
+				</div>
+			</th:block>
+			
+			<nav aria-label="Page navigation" th:if="${totalPages > 0}">
+				<ul class="pagination justify-content-center qp-pagination">
+					<li class="page-item" th:classappend="${isFirst} ? 'disabled'">
+						<a class="page-link" th:href="@{'/produtos'(pageNo=${pageNo - 1}, pageSize=${pageSize})}" aria-label="Anterior">
+						&laquo;
+						</a>
+					</li>
+
+					<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNo == i} ? 'active'">
+						<a class="page-link" th:href="@{'/produtos'(pageNo=${i}, pageSize=${pageSize})}" th:text="${i + 1}">1</a>
+					</li>
+
+					<li class="page-item" th:classappend="${isLast} ? 'disabled'">
+						<a class="page-link" th:href="@{'/produtos'(pageNo=${pageNo + 1}, pageSize=${pageSize})}" aria-label="Próximo">
+						&raquo;
+						</a>
+					</li>
+				</ul>
+			</nav>
+
+		</div>
+	</section>
+</div>
+
+</body>
+</html>

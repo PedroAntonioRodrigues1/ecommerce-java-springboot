@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+th:replace="~{base :: Layout(~{:: #conteudo-order}, ~{:: #estilos-pedido}, ~{})}">
+<head>
+
+<meta charset="UTF-8">
+
+<th:block id="estilos-pedido">
+
+<link rel="stylesheet" th:href="@{/css/pedidos-lista.css}">
+
+</th:block>
+
+</head>
+
+<body>
+
+
+
+<div id="conteudo-order">
+
+<div class="container py-5">
+
+<h2 class="mb-4" style="color: #5D4037; font-weight: 800; text-align: center;">Meus Pedidos</h2>
+
+
+
+<th:block th:if="${session.succMsg}">
+
+<div class="alert alert-success text-center">[[${session.succMsg}]]</div>
+
+<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+
+</th:block>
+
+
+
+<div th:if="${#lists.isEmpty(orders)}" class="no-orders-container">
+
+<div class="no-orders">
+
+<i class="fas fa-shopping-bag"></i>
+
+<p>Você ainda não fez nenhum pedido no Quintal.</p>
+
+<a href="/produtos" class="btn-detalhes" style="display:inline-block; margin-top:15px;">Ir às compras</a>
+
+</div>
+
+</div>
+
+
+
+<div class="order-list-container" th:unless="${#lists.isEmpty(orders)}">
+
+<div class="order-card" th:each="pedido : ${orders}">
+
+
+<div class="card-header">
+
+<div class="header-info">
+
+<span class="order-id-label">Pedido</span>
+
+<span class="order-id" th:text="${'#' + pedido.orderId}">#10045</span>
+
+</div>
+
+<div class="header-info">
+
+<span class="order-date-label">Data</span>
+
+<span class="order-date" th:text="${#dates.format(pedido.orderDate, 'dd/MM/yyyy')}">15/10/2025</span>
+
+</div>
+
+</div>
+
+
+
+<div class="card-body">
+
+<div class="product-details">
+
+<th:block th:if="${pedido.items != null and !pedido.items.empty}">
+
+<img th:if="${pedido.items[0].produto.imagens != null and !pedido.items[0].produto.imagens.empty}"
+
+th:src="@{'/img/produto_img/' + ${pedido.items[0].produto.imagens[0]}}"
+
+class="product-thumb">
+
+
+<img th:unless="${pedido.items[0].produto.imagens != null and !pedido.items[0].produto.imagens.empty}"
+
+src="/img/sem-imagem.jpg" class="product-thumb">
+
+
+
+<div class="product-info">
+
+<span class="product-title" th:text="${pedido.items[0].produto.titulo}">Nome do Produto</span>
+
+<small th:if="${pedido.items.size() > 1}" class="text-muted">
+
++ [[${pedido.items.size() - 1}]] outro(s) item(ns)
+
+</small>
+
+</div>
+
+</th:block>
+
+</div>
+
+
+
+<div class="order-price">
+
+<span class="price-label">Total do Pedido</span>
+
+<span class="price-value">R$ [[${#aggregates.sum(pedido.items.![priceSnapshot])}]]</span>
+
+</div>
+
+</div>
+
+
+
+<div class="card-footer">
+
+<div class="order-status">
+
+<span th:with="statusClass=${
+
+pedido.status == 'Em progresso...' ? 'status-IN_PROGRESS' :
+
+(pedido.status == 'Pedido Recebido' ? 'status-ORDER_RECIVED' :
+
+(pedido.status == 'Entrega Realizada' ? 'status-DELIVERED' :
+
+(pedido.status == 'Pedido Cancelado' ? 'status-CANCELED' : '')))
+
+}" class="status-badge" th:classappend="${statusClass}" th:text="${pedido.status}">
+
+</span>
+
+</div>
+
+<a th:href="@{/user/order-details/{orderId}(orderId=${pedido.orderId})}" class="btn-detalhes">
+
+Ver Detalhes
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

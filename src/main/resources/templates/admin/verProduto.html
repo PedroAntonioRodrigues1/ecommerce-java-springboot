@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{:: #conteudo-verProduto}, ~{:: #estilos-verProduto}, ~{})}">
+<head>
+<meta charset="UTF-8">
+<title>Visualizar Produtos - Admin</title>
+<th:block id="estilos-verProduto">
+	<link rel="stylesheet" th:href="@{/css/verProdutoamd.css}">
+</th:block>
+</head>
+<body>
+	<div id="conteudo-verProduto">
+		<div class="container" style="margin-top: 60px">
+			<div class="adminVerProduto-header text-center">
+				<h1 class="display-5 fw-bold">
+					<i class="fas fa-boxes"></i> Gerenciamento de Produtos
+				</h1>
+				<p class="lead mb-0">Visualize e gerencie todos os produtos do
+					sistema</p>
+			</div>
+			<th:block th:if="${session.succMsg}">
+				<p class="text-success fw-bold" style="text-align: center;">[[${session.succMsg}]]</p>
+				<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+			</th:block>
+
+			<th:block th:if="${session.errorMsg}">
+				<p class="text-danger fw-bold" style="text-align: center;">[[${session.errorMsg}]]</p>
+				<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+			</th:block>
+
+			<div class="adminVerProduto-header-content mb-4">
+				<div class="adminVerProduto-search-bar d-flex align-items-center">
+					<form th:action="@{/admin/verProduto}" method="get" class="d-flex">
+						<input type="text" placeholder="Pesquisar..." name="ch"
+							th:value="${searchTerm}" class="form-control me-2">
+						<button type="submit" class="btn btn-primary">
+							<i class="fas fa-search"></i>
+						</button>
+						<a th:if="${searchTerm != null}" th:href="@{/admin/verProduto}"
+							class="btn btn-secondary ms-2">Limpar</a>
+					</form>
+				</div>
+				<a th:href="@{/admin/addProduto}" class="adminVerProduto-add-btn">
+					<i class="fas fa-plus me-2"></i> Adicionar Produto
+				</a>
+			</div>
+
+			<div class="adminVerProduto-card">
+				<div class="adminVerProduto-card-header">
+					<span class="adminVerProduto-title"><i
+						class="fas fa-list me-2"></i> Lista de Produtos</span> <span
+						class="badge bg-primary">Total: [[${totalElements}]]</span>
+				</div>
+				<div class="adminVerProduto-card-body table-responsive">
+					<table class="table adminVerProduto-table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Imagem</th>
+								<th>Título</th>
+								<th>Preço</th>
+								<th>Ativo</th>
+								<th>Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="p : ${produto}">
+								<td th:text="${p.id}">ID</td>
+								<td><img
+									th:src="${p.imagens != null and !p.imagens.empty} ? @{'/img/produto_img/' + ${p.imagens[0]}} : '/img/sem-imagem.jpg'"
+									width="70px"></td>
+								<td>
+									<div class="fw-bold" th:text="${p.titulo}">Título</div>
+									<div class="mt-2">
+										<span class="badge bg-light text-dark border me-1">[[${p.info.material}]]</span>
+										<span class="badge bg-light text-dark border me-1">[[${p.info.dimensoes}]]</span>
+									</div>
+								</td>
+								<td class="adminVerProduto-price"
+									th:text="${'R$ ' + #numbers.formatDecimal(p.preco, 1, 'POINT', 2, 'COMMA')}"></td>
+								<td><span th:if="${p.ativo}" class="badge bg-success">Sim</span>
+									<span th:unless="${p.ativo}" class="badge bg-danger">Não</span>
+								</td>
+								<td class="adminVerProduto-action-buttons"><a
+									th:href="@{'/admin/editarProduto/' + ${p.id}}"
+									class="btn adminVerProduto-btn-edit btn-sm"><i
+										class="fas fa-edit"></i></a> <a
+									th:href="@{'/admin/deleteProduct/' + ${p.id}}"
+									class="btn adminVerProduto-btn-delete btn-sm"><i
+										class="fas fa-trash"></i></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

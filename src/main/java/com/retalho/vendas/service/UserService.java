@@ -1,0 +1,37 @@
+package com.retalho.vendas.service;
+
+import java.util.List;
+
+import com.retalho.vendas.model.UserDtls;
+
+public interface UserService {
+	
+	public UserDtls saveUser(UserDtls user);
+	
+	public UserDtls getUserbyEmail(String email);
+	
+	public List<UserDtls> getUsers(String role);
+
+	public Boolean updateAccountStatus(Integer id, Boolean status);
+	
+	public void increaseFailedAttempt(UserDtls user);
+	
+	public void userAccountLock(UserDtls user);
+	
+	public Boolean unlockAccountTimeExpired(UserDtls user);
+	
+	public void resetAttempt(Integer userId);
+
+	public void updateResetToken(String email, String resetToken);
+	
+	public UserDtls getUserbyToken(String token);
+	
+	public UserDtls updateUser(UserDtls user);
+	
+	public UserDtls updateUserProfile(UserDtls user);
+	
+	public UserDtls saveAdmin(UserDtls user);
+	
+	public Boolean existsEmail(String email);
+
+}

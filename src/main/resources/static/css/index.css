@@ -1,0 +1,140 @@
+@charset "UTF-8";
+
+/* Reset e Estrutura base */
+.products-grid, .products-grid * {
+    box-sizing: border-box;
+}
+
+.titulo{
+	font-weight: 300;
+	color: #400040;;
+	font-size:1.0rem;
+	text-align: center;
+	margin-bottom: 3rem;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    padding: 2rem 0;
+}
+
+/* O Card: Agora como um link funcional */
+.products-grid .product-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.products-grid .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(78, 52, 46, 0.12);
+    border-color: #D4C8B8;
+}
+
+/* Imagem quadrada e profissional */
+.products-grid .product-image-container {
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background: #f8f8f8;
+}
+
+.products-grid .product-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.products-grid .product-card:hover .product-image-container img {
+    transform: scale(1.06);
+}
+
+/* Conteúdo interno */
+.products-grid .product-details {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align:center;
+}
+
+.products-grid .qp-product-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #400040; /* Marrom Café */
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.products-grid .qp-product-desc {
+    font-size: 0.95rem;
+    color: #400040; /* Marrom Suave */
+    margin-bottom: 15px;
+    line-height: 1.4;
+    
+    /* Mágica das 2 linhas fixas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.7rem; 
+}
+
+/* Rodapé alinhado */
+.qp-footer-card {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.products-grid .qp-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #400040; /* Terracota Vibrante */
+    margin: 0;
+}
+
+/* Botão menor e rústico */
+.products-grid .qp-btn-primary {
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #4E342E;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.5);
+    text-align: center;
+    transition: 0.3s;
+}
+
+/* O botão reage ao passar o mouse no card */
+.products-grid .product-card:hover .qp-btn-primary {
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #fff;
+    border-style: solid;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .carousel-inner img { height: 280px; }
+    .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+}
+
+@media (max-width: 480px) {
+    .products-grid { grid-template-columns: 1fr; padding: 1rem; }
+}
+
+.carousel-inner img {
+    height: 450px;
+    object-fit: cover;
+}

@@ -1,0 +1,37 @@
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="base::Layout(~{::section}, ~{}), ~{:: #scripts-cadastro})}">
+<head>
+<meta charset="UTF-8">
+<title>ERRO - Quintal Arte & Retalhos</title>
+<link rel="stylesheet" href="/css/auth.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="auth-page">
+  <div class="fundo-retalhos" id="fundoRetalhos"></div>
+  <section data-aos="zoom-in" data-aos-duration="800">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="auth-card" 
+               style="margin:150px auto; padding:30px; border-radius:8px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+            <h3 class="text-center" style="margin:0;">[[${msg}]]</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <th:block id="conteudo-cadastro">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration : 1000,
+      once : true
+    });
+  </script>
+  </th:block>
+</body>
+</html>
+

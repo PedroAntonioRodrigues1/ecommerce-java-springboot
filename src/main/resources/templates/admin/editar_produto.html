@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{:: #conteudo-edit-prod}, ~{:: #estilos-edit-prod}, ~{:: #scripts-edt-prod})}">
+<head>
+<meta charset="UTF-8">
+<title>Editar Produto</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<th:block id="estilos-edit-prod">
+	<link rel="stylesheet" th:href="@{/css/formularios.css}">
+</th:block>
+</head>
+<body>
+	<div id="conteudo-edit-prod">
+			<div class="container">
+				<div class="text-center mb-4">
+					<h1 class="display-5">Editar Produto</h1>
+					<p class="lead">Atualize as informações do produto.</p>
+					<th:block th:if="${session.succMsg}">
+						<p class="text-success fw-bold">[[${session.succMsg}]]</p>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</th:block>
+
+					<th:block th:if="${session.errorMsg}">
+						<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</th:block>
+				</div>
+
+				<form th:action="@{/admin/atualizarProduto}" method="post"
+					enctype="multipart/form-data" class="row g-3">
+					<input type="hidden" name="id" th:value=${produto.id}> <input
+						type="hidden" name="info" th:value="${produto.info}">
+
+					<div class="col-md-6">
+						<label class="form-label addProduto-required-field">Nome
+							do Produto</label> <input type="text" name="titulo" class="form-control"
+							th:value="${produto.titulo}" required>
+					</div>
+
+					<div class="col-md-6">
+						<label class="form-label addProduto-required-field">Preço
+							(R$)</label> <input type="number" name="preco" class="form-control"
+							min="0.01" step="0.01" th:value="${produto.preco}" required>
+					</div>
+
+					<div class="col-md-12">
+						<label class="form-label addProduto-required-field">Descrição</label>
+						<textarea name="descricao" class="form-control" rows="3" required>[[${produto.descricao}]]</textarea>
+					</div>
+
+					<div class="col-md-12 mt-4">
+						<h5 class="mb-3">Detalhes do Produto</h5>
+						<div
+							class="row align-items-center bg-light p-3 border rounded mx-0">
+							<div class="col-md-8 mb-3 mb-md-0">
+								<span class="d-block mb-2 text-muted small"><i
+									class="fas fa-info-circle"></i> Características definidas pelo
+									tipo de produto (Imutáveis):</span> <span
+									class="badge bg-white text-dark border me-1 p-2"> <i
+									class="fas fa-palette me-1"></i> [[${produto.info.material}]]
+								</span> <span class="badge bg-white text-dark border me-1 p-2">
+									<i class="fas fa-ruler-combined me-1"></i>
+									[[${produto.info.dimensoes}]]
+								</span> <span class="badge bg-white text-dark border p-2"> <i
+									class="fas fa-tint me-1"></i> [[${produto.info.cuidados}]]
+								</span>
+							</div>
+
+							<div class="col-md-4">
+								<label class="form-label addProduto-required-field fw-bold">Produto
+									Ativo?</label> <select name="ativo" class="form-select" required>
+									<option value="" disabled>Selecione...</option>
+									<option value="true" th:selected="${produto.ativo} == true">Sim</option>
+									<option value="false" th:selected="${produto.ativo} == false">Não</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 mt-4">
+						<h5 class="mb-4">Imagens do Produto (3 obrigatórias)</h5>
+						<div class="row">
+							<div class="col-md-4 mb-4">
+								<div
+									class="addProduto-image-card h-100 p-3 border rounded bg-white">
+									<div class="mb-3">
+										<label class="form-label addProduto-required-field">Imagem
+											Principal</label> <input type="file" name="file1"
+											class="form-control" accept="image/*"
+											onchange="previewImage(event, 1)"
+											th:attr="required=${produto.imagens == null or #lists.size(produto.imagens) < 1}">
+									</div>
+
+									<div class="addProduto-image-preview-container">
+										<div class="addProduto-image-preview" id="preview1">
+											<img
+												th:if="${produto.imagens != null and #lists.size(produto.imagens) > 0}"
+												th:src="@{'/img/produto_img/' + ${produto.imagens[0]}}"
+												alt="Imagem 1"> <i class="fas fa-image text-muted"
+												th:unless="${produto.imagens != null and #lists.size(produto.imagens) > 0}"></i>
+										</div>
+									</div>
+									<p class="text-muted small mt-2 mb-0 text-center">Esta será
+										a imagem principal</p>
+								</div>
+							</div>
+
+							<div class="col-md-4 mb-4">
+								<div
+									class="addProduto-image-card h-100 p-3 border rounded bg-white">
+									<div class="mb-3">
+										<label class="form-label addProduto-required-field">Segunda
+											Imagem</label> <input type="file" name="file2" class="form-control"
+											accept="image/*" onchange="previewImage(event, 2)"
+											th:attr="required=${produto.imagens == null or #lists.size(produto.imagens) < 2}">
+									</div>
+
+									<div class="addProduto-image-preview-container">
+										<div class="addProduto-image-preview" id="preview2">
+											<img
+												th:if="${produto.imagens != null and #lists.size(produto.imagens) > 1}"
+												th:src="@{'/img/produto_img/' + ${produto.imagens[1]}}"
+												alt="Imagem 2"> <i class="fas fa-image text-muted"
+												th:unless="${produto.imagens != null and #lists.size(produto.imagens) > 1}"></i>
+										</div>
+									</div>
+									<p class="text-muted small mt-2 mb-0 text-center">Galeria
+										do produto</p>
+								</div>
+							</div>
+
+							<div class="col-md-4 mb-4">
+								<div
+									class="addProduto-image-card h-100 p-3 border rounded bg-white">
+									<div class="mb-3">
+										<label class="form-label addProduto-required-field">Terceira
+											Imagem</label> <input type="file" name="file3" class="form-control"
+											accept="image/*" onchange="previewImage(event, 3)"
+											th:attr="required=${produto.imagens == null or #lists.size(produto.imagens) < 3}">
+									</div>
+
+									<div class="addProduto-image-preview-container">
+										<div class="addProduto-image-preview" id="preview3">
+											<img
+												th:if="${produto.imagens != null and #lists.size(produto.imagens) > 2}"
+												th:src="@{'/img/produto_img/' + ${produto.imagens[2]}}"
+												alt="Imagem 3"> <i class="fas fa-image text-muted"
+												th:unless="${produto.imagens != null and #lists.size(produto.imagens) > 2}"></i>
+										</div>
+									</div>
+									<p class="text-muted small mt-2 mb-0 text-center">Galeria
+										do produto</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 text-center mt-4 mb-5">
+						<button type="submit" class="btn btn-primary px-5 py-3 fw-bold">
+							<i class="fas fa-save me-2"></i> Salvar Alterações
+						</button>
+					</div>
+				</form>
+			</div>
+	</div>
+	<th:block id="scripts-edt-prod">
+		<script>
+			// Função para pré-visualizar as imagens dinamicamente
+			function previewImage(event, previewId) {
+				const preview = document.getElementById(`preview${previewId}`);
+				const file = event.target.files[0];
+				const reader = new FileReader();
+
+				preview.innerHTML = ''; // Limpa o conteúdo anterior
+
+				reader.onload = function(e) {
+					const img = document.createElement('img');
+					img.src = e.target.result;
+					preview.appendChild(img);
+				}
+
+				if (file) {
+					// Valida o tipo de arquivo
+					if (!file.type.match('image.*')) {
+						alert('Por favor, selecione um arquivo de imagem válido!');
+						event.target.value = '';
+						preview.innerHTML = '<i class="fas fa-image text-muted"></i>';
+						return;
+					}
+
+					// Valida o tamanho do arquivo (máx 5MB)
+					if (file.size > 5 * 1024 * 1024) {
+						alert('A imagem é muito grande! Tamanho máximo permitido: 5MB');
+						event.target.value = '';
+						preview.innerHTML = '<i class="fas fa-image text-muted"></i>';
+						return;
+					}
+
+					reader.readAsDataURL(file);
+				}
+			}
+		</script>
+
+	</th:block>
+</body>
+</html>

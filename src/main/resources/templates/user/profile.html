@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: Layout(~{:: #conteudo-perfil}, ~{:: #estilos-perfil}, ~{:: #scripts-cart})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil - Quintal Arte & Retalhos</title>
+
+    <th:block id="estilos-perfil">
+        <link rel="stylesheet" th:href="@{/css/perfil.css}">
+        <style>
+            /* Estilos dos cards de endereço */
+            .endereco-card {
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                transition: 0.3s;
+            }
+
+            .endereco-card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                border-color: #D4C8B8;
+            }
+
+            .btn-add-endereco {
+                background-color: #198754;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                text-decoration: none;
+            }
+
+            .btn-add-endereco:hover {
+                background-color: #157347;
+                color: white;
+            }
+
+            /* Classe para esconder as seções que não estão ativas */
+            .tab-section {
+                display: none;
+                animation: fadeIn 0.4s ease-in-out;
+            }
+
+            /* A seção ativa aparece */
+            .tab-section.active-section {
+                display: block;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<div id="conteudo-perfil">
+    <div class="profile-container container my-5">
+        <div class="row gap-4 gap-lg-0">
+
+            <div class="col-lg-3">
+                <div class="profile-sidebar p-4">
+                    <div class="profile-user text-center mb-4">
+                        <div class="profile-avatar mb-3">
+                            <span id="user-initials"></span>
+                        </div>
+                        <h5 class="profile-name" th:text="${user.nome}">Joana Silva</h5>
+                        <small class="text-muted" th:text="${user.loginEmail}">joana.silva@email.com</small>
+                    </div>
+
+                    <nav class="profile-nav">
+                        <a href="#dados" class="profile-nav-link active" data-target="section-dados">
+                            <i class="fas fa-user-edit"></i> Dados Pessoais
+                        </a>
+                        <a href="#enderecos" class="profile-nav-link" data-target="section-enderecos">
+                            <i class="fas fa-map-marker-alt"></i> Meus Endereços
+                        </a>
+                        <a th:href="@{/user/user-orders}" class="profile-nav-link">
+                            <i class="fas fa-box-open"></i> Meus Pedidos
+                        </a>
+                        <a href="#seguranca" class="profile-nav-link" data-target="section-seguranca">
+                            <i class="fas fa-shield-alt"></i> Segurança
+                        </a>
+                        <a th:href="@{/logout}" class="profile-nav-link text-danger">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="profile-content p-4 p-md-5">
+
+                    <th:block th:if="${session.succMsg}">
+                        <div class="alert alert-success text-center fw-bold">[[${session.succMsg}]]</div>
+                        <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <th:block th:if="${session.errorMsg}">
+                        <div class="alert alert-danger text-center fw-bold">[[${session.errorMsg}]]</div>
+                        <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <section id="section-dados" class="tab-section active-section">
+                        <h2 class="section-title">Dados Pessoais</h2>
+                        <p class="section-description">Gerencie suas informações pessoais e de contato.</p>
+                        <hr class="mb-4 profile-divider">
+
+                        <form th:action="@{/user/update-profile}" th:object="${user}" method="post" id="form-dados" novalidate>
+                            <input type="hidden" name="id" th:value="${user.id}" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="nome" class="form-label">Nome Completo</label>
+                                        <input type="text" th:field="*{nome}" class="form-control profile-input" id="nome" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Nome é obrigatório</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control profile-input" id="email" th:value="${user.loginEmail}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="telefone" class="form-label">Telefone / Celular</label>
+                                        <input type="tel" th:field="*{telefone}" name="telefone" class="form-control profile-input" id="telefone">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="submit" class="qp-btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section id="section-enderecos" class="tab-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h2 class="section-title mb-1">Meus Endereços</h2>
+                                <p class="section-description mb-0">Gerencie seus endereços para agilizar o checkout.</p>
+                            </div>
+                            <button type="button" class="btn-add-endereco shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovoEndereco">
+                                <i class="fas fa-plus me-1"></i> Novo Endereço
+                            </button>
+                        </div>
+                        <hr class="mb-4 profile-divider">
+
+                        <div th:if="${enderecos == null or #lists.isEmpty(enderecos)}" class="text-center py-5">
+                            <i class="fas fa-map-marked-alt fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">Você ainda não possui endereços salvos.</h5>
+                        </div>
+
+                        <div class="row" th:if="${enderecos != null and not #lists.isEmpty(enderecos)}">
+                            <div class="col-md-6 mb-4" th:each="end : ${enderecos}">
+                                <div class="endereco-card p-4 h-100 d-flex flex-column bg-white">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="fw-bold mb-0" th:text="${end.nomeCompleto}">Nome</h5>
+                                    </div>
+
+                                    <p class="text-muted mb-1 mt-2">
+                                        [[${end.endereco}]], Nº [[${end.numero}]] <br>
+                                        <span th:if="${end.complemento != null and end.complemento != ''}">[[${end.complemento}]]<br></span>
+                                        [[${end.bairro}]] - [[${end.cidade}]]/[[${end.estado}]] <br>
+                                        CEP: [[${end.cep}]]
+                                    </p>
+                                    <p class="text-muted mb-3">
+                                        <i class="fas fa-phone me-1"></i> [[${end.telefone}]]
+                                    </p>
+
+                                    <div class="mt-auto d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" data-bs-toggle="modal" th:data-bs-target="'#modalEditarEndereco' + ${end.id}">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                        <a th:href="@{/user/endereco/excluir/{id}(id=${end.id})}" class="btn btn-outline-danger btn-sm flex-fill" onclick="return confirm('Tem certeza que deseja excluir este endereço?');">
+                                            <i class="fas fa-trash-alt"></i> Excluir
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="section-seguranca" class="tab-section">
+                        <h2 class="section-title">Alterar senha</h2>
+                        <p class="section-description">Altere sua senha com segurança. Será solicitada a senha atual.</p>
+                        <hr class="mb-4 profile-divider">
+
+                        <form th:action="@{/user/change-password}" method="post" id="form-senha" novalidate>
+                            <div class="form-group mb-3">
+                                <label for="senhaAtual" class="form-label">Senha atual</label>
+                                <input type="password" name="currentPassword" id="currentPassword" class="form-control profile-input" required>
+                                <div class="invalid-feedback">Informe sua senha atual</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="novaSenha" class="form-label">Nova senha</label>
+                                        <input type="password" name="newPassword" id="newPassword" class="form-control profile-input" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="confirmaSenha" class="form-label">Confirmar nova senha</label>
+                                        <input type="password" name="confirmaSenha" id="confirmaSenha" class="form-control profile-input" required>
+                                        <div class="invalid-feedback">As senhas não coincidem</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn-alterar-senha btn btn-dark">Alterar Senha</button>
+                            </div>
+                        </form>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNovoEndereco" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cadastrar Novo Endereço</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/user/endereco/salvar}" th:object="${novoEndereco}" method="post" class="form-endereco" novalidate>
+                    <div class="modal-body">
+           
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">CEP</label>
+                                <input type="text" th:field="*{cep}" name="cep" class="form-control" required>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Rua / Avenida</label>
+                                <input type="text" th:field="*{endereco}" name="endereco" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Número</label>
+                                <input type="text" th:field="*{numero}" name="numero" class="form-control" required>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Complemento</label>
+                                <input type="text" th:field="*{complemento}" name="complemento" class="form-control" placeholder="Apto, Bloco, Casa 2...">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Bairro</label>
+                                <input type="text" th:field="*{bairro}" name="bairro" class="form-control" required>
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label">Cidade</label>
+                                <input type="text" th:field="*{cidade}" name="cidade" class="form-control" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Estado (UF)</label>
+                                <input type="text" th:field="*{estado}" name="estado" class="form-control" maxlength="2" placeholder="SP" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Salvar Endereço</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:if="${enderecos != null and not #lists.isEmpty(enderecos)}">
+        <div class="modal fade" th:each="end : ${enderecos}" th:id="'modalEditarEndereco' + ${end.id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Endereço</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/user/endereco/salvar}" method="post" class="form-endereco" novalidate>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" th:value="${end.id}" />
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">CEP</label>
+                                    <input type="text" name="cep" class="form-control" th:value="${end.cep}" required>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label">Rua / Avenida</label>
+                                    <input type="text" name="endereco" class="form-control" th:value="${end.endereco}" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Número</label>
+                                    <input type="text" name="numero" class="form-control" th:value="${end.numero}" required>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label">Complemento</label>
+                                    <input type="text" name="complemento" class="form-control" th:value="${end.complemento}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Bairro</label>
+                                    <input type="text" name="bairro" class="form-control" th:value="${end.bairro}" required>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="form-label">Cidade</label>
+                                    <input type="text" name="cidade" class="form-control" th:value="${end.cidade}" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Estado (UF)</label>
+                                    <input type="text" name="estado" class="form-control" th:value="${end.estado}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+</div>
+
+<th:block id="scripts-cart">
+    <script>
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. LÓGICA DAS ABAS (TABS)
+            const navLinks = document.querySelectorAll('.profile-nav-link[data-target]');
+            const sections = document.querySelectorAll('.tab-section');
+
+            // Verifica se tem algo na URL (ex: /perfil#enderecos) para abrir a aba certa direto
+            const currentHash = window.location.hash;
+
+            navLinks.forEach(link => {
+                // Se a URL tiver #enderecos ou #seguranca, ativa a aba correspondente no carregamento
+                if(currentHash && link.getAttribute('href') === currentHash) {
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(sec => sec.classList.remove('active-section'));
+                    link.classList.add('active');
+                    document.getElementById(link.getAttribute('data-target')).classList.add('active-section');
+                }
+
+                // Quando o usuário clica no menu
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Remove ativo de todos
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(sec => sec.classList.remove('active-section'));
+                    // Adiciona ativo no que foi clicado
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active-section');
+                    // Atualiza a URL na barra de endereços (sem recarregar) para manter o histórico
+                    history.pushState(null, null, this.getAttribute('href'));
+                });
+            });
+
+            // 3. INICIAIS DO USUÁRIO
+            const nameStr = document.querySelector('.profile-name').innerText.trim();
+            const nameParts = nameStr.split(' ');
+            let initials = nameParts[0].charAt(0);
+
+            if (nameParts.length > 1) {
+                initials += nameParts[nameParts.length - 1].charAt(0);
+            }
+            document.getElementById('user-initials').innerText = initials.toUpperCase();
+        });
+     // 4. INTEGRAÇÃO VIA CEP
+        document.addEventListener('keyup', function(e) {
+            // Verifica se o elemento que sofreu o evento é um campo de CEP
+            if (e.target && e.target.name === 'cep') {
+                let cep = e.target.value.replace(/\D/g, ''); // Remove o que não é número
+
+                if (cep.length === 8) {
+                    // Encontra o formulário pai (pode ser o de Novo ou de Editar)
+                    const form = e.target.closest('form');
+                    
+                    // Campos que serão preenchidos
+                    const campoRua = form.querySelector('[name="endereco"]');
+                    const campoBairro = form.querySelector('[name="bairro"]');
+                    const campoCidade = form.querySelector('[name="cidade"]');
+                    const campoEstado = form.querySelector('[name="estado"]');
+
+                    // Feedback visual (opcional)
+                    campoRua.value = "...";
+                    campoBairro.value = "...";
+                    campoCidade.value = "...";
+                    campoEstado.value = "...";
+
+                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!("erro" in data)) {
+                                campoRua.value = data.logradouro;
+                                campoBairro.value = data.bairro;
+                                campoCidade.value = data.localidade;
+                                campoEstado.value = data.uf;
+                                
+                                // Foca no campo número para o usuário continuar digitando
+                                form.querySelector('[name="numero"]').focus();
+                            } else {
+                                alert("CEP não encontrado.");
+                                limpa_formulario_cep(form);
+                            }
+                        })
+                        .catch(() => {
+                            alert("Erro ao buscar o CEP.");
+                        });
+                }
+            }
+        });
+
+        function limpa_formulario_cep(form) {
+            form.querySelector('[name="cep"]').value = "";
+            form.querySelector('[name="endereco"]').value = "";
+            form.querySelector('[name="bairro"]').value = "";
+            form.querySelector('[name="cidade"]').value = "";
+            form.querySelector('[name="estado"]').value = "";
+        }
+        /*]]>*/
+    </script>
+</th:block>
+
+</body>
+</html>

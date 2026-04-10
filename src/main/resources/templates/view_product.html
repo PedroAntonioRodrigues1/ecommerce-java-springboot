@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base :: Layout(~{:: #conteudo-styles}, ~{:: #estilos-styles}, ~{:: #scripts-styles})}">
+<head>
+<meta charset="UTF-8">
+<th:block id="estilos-styles">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</th:block>
+</head>
+<body class="retalhos-page">
+	<div id="conteudo-styles">
+		<div class="toast-container position-fixed top-0 end-0 p-3"
+			style="z-index: 1080;">
+
+			<th:block th:if="${succMsg}">
+				<div class="toast align-items-center text-bg-success border-0"
+					role="alert">
+					<div class="d-flex">
+						<div class="toast-body" th:text="${succMsg}"></div>
+						<button type="button"
+							class="btn-close btn-close-white me-2 m-auto"
+							data-bs-dismiss="toast"></button>
+					</div>
+				</div>
+			</th:block>
+
+			<th:block th:if="${warnMsg}">
+				<div class="toast align-items-center text-bg-warning border-0"
+					role="alert">
+					<div class="d-flex">
+						<div class="toast-body" th:text="${warnMsg}"></div>
+						<button type="button" class="btn-close me-2 m-auto"
+							data-bs-dismiss="toast"></button>
+					</div>
+				</div>
+			</th:block>
+
+			<th:block th:if="${errorMsg}">
+				<div class="toast align-items-center text-bg-danger border-0"
+					role="alert">
+					<div class="d-flex">
+						<div class="toast-body" th:text="${errorMsg}"></div>
+						<button type="button"
+							class="btn-close btn-close-white me-2 m-auto"
+							data-bs-dismiss="toast"></button>
+					</div>
+				</div>
+			</th:block>
+
+		</div>
+		<div class="container product-detail-view" data-aos="fade-up">
+			<div class="row">
+
+				<div class="col-md-6">
+					<div class="product-img-view">
+						<img
+							th:src="${(produto.imagens != null and !produto.imagens.empty) 
+             ? '/img/produto_img/' + produto.imagens[0] 
+             : '/img/sem-imagem.jpg'}"
+							th:alt="${produto.titulo}">
+					</div>
+
+					<div class="product-gallery-view"
+						th:if="${produto.imagens != null and produto.imagens.size() > 1}">
+
+						<img th:each="img : ${produto.imagens}"
+							th:src="@{'/img/produto_img/' + ${img}}" th:alt="Miniatura"
+							style="cursor: pointer;">
+					</div>
+				</div>
+
+				<div class="col-md-6 product-info-view">
+					<h1 th:text="${produto.titulo}">Título do Produto</h1>
+
+					<div class="price">
+						<small>R$</small> <span
+							th:text="${#numbers.formatDecimal(produto.preco, 1, 'POINT', 2, 'COMMA')}">149,90</span>
+					</div>
+
+					<p class="description" th:text="${produto.descricao}">Esta peça
+						é produzida artesanalmente com retalhos selecionados, garantindo
+						que cada unidade seja única e conte sua própria história através
+						das cores e texturas.</p>
+
+					<th:block th:if="${user==null}">
+						<a href="/signin" class="btn-add-cart-view">Adicionar ao
+							Carrinho</a>
+					</th:block>
+					<th:block th:if="${user!=null}">
+						<a id="addToCartBtn"
+							th:href="@{/user/addCart(pid=${produto.id}, uid=${user.id})}"
+							class="btn-add-cart-view"> Adicionar ao Carrinho </a>
+					</th:block>
+
+					<div class="product-additional-view">
+						<h5>Especificações Técnicas</h5>
+						<p>
+							<strong>Material:</strong> <span
+								th:text="${produto.info.material}">Material Padrão</span>
+						</p>
+						<p>
+							<strong>Dimensões:</strong> <span
+								th:text="${produto.info.dimensoes}">Dimensão Padrão</span>
+						</p>
+						<p>
+							<strong>Cuidados:</strong> <span
+								th:text="${produto.info.cuidados}">Cuidado Padrão</span>
+						</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<th:block id="scripts-styles">
+		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+		<script>
+    AOS.init({ duration: 800, once: true });
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainImage = document.querySelector('.product-img-view img');
+        const thumbs = document.querySelectorAll('.product-gallery-view img');
+
+        thumbs.forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                mainImage.src = thumb.src;
+            });
+        });
+
+        // Lógica de Toast Simplificada e à prova de falhas
+        const toastElList = Array.from(document.querySelectorAll('.toast'));
+        toastElList.forEach(el => new bootstrap.Toast(el, { delay: 2500 }).show());
+    });
+  </script>
+	</th:block>
+
+</body>
+</html>

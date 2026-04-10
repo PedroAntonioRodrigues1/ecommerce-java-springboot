@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: Layout(~{:: #conteudo-user-adm}, ~{:: #estilos-user-adm}, ~{:: #scripts-user-adm})}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerenciamento de Usuários - Admin</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/css/adminVerProduto.css">
+<th:block id="estilos-user-adm">
+	<link rel="stylesheet" th:href="@{/css/verProdutoamd.css}">
+</th:block>
+</head>
+<body>
+	<div id="conteudo-user-adm" class="adminVerProduto-container">
+		<div class="container" style="margin-top: 60px">
+			<div class="adminVerProduto-header text-center"
+				th:if="usuariosType==1">
+				<h1 class="display-5 fw-bold">
+					<i class="fas fa-boxes"></i> Gerenciamento de Usuários
+				</h1>
+				<p class="lead mb-0">Visualize e gerencie todos os usuários do
+					sistema</p>
+			</div>
+			<div class="adminVerProduto-header text-center"
+				th:if="usuariosType==2">
+				<h1 class="display-5 fw-bold">
+					<i class="fas fa-boxes"></i> Gerenciamento de Administradores
+				</h1>
+				<p class="lead mb-0">Visualize e gerencie todos os
+					adminstradores do sistema</p>
+			</div>
+
+			<th:block th:if="${session.succMsg}">
+				<div class="text-center adminVerProduto-alert alert alert-success">
+					<i class="fas fa-check-circle"></i> [[${session.succMsg}]]
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</div>
+			</th:block>
+
+			<th:block th:if="${session.errorMsg}">
+				<div class="adminVerProduto-alert alert alert-danger">
+					<i class="fas fa-exclamation-circle"></i> [[${session.errorMsg}]]
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</div>
+			</th:block>
+
+			<div class="adminVerProduto-header-content mb-4">
+				<div class="adminVerProduto-search-bar d-flex align-items-center">
+					<button type="button">
+						<i class="fas fa-search"></i>
+					</button>
+					<input type="text" placeholder="Pesquisar usuários...">
+				</div>
+			</div>
+
+			<div class="adminVerProduto-card">
+				<div class="adminVerProduto-card-header">
+					<span class="adminVerProduto-title"><i
+						class="fas fa-users me-2"></i> Lista de Usuários</span> <span
+						class="badge bg-primary">Total: [[${usuarios.size()}]]
+						usuários</span>
+				</div>
+				<div class="adminVerProduto-card-body">
+					<div class="table-responsive">
+						<table class="table adminVerProduto-table">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Informações de Contato</th>
+									<th>Status</th>
+									<th>Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="user : ${usuarios}">
+									<td data-label="ID">[[${user.id}]]</td>
+
+									<td data-label="Contato">
+										<div class="fw-bold">[[${user.nome}]]</div>
+										<div class="text-muted small mt-1">
+											<i class="fas fa-envelope me-1"></i> [[${user.loginEmail}]]
+										</div>
+										<div class="text-muted small">
+											<i class="fas fa-phone me-1"></i> <span
+												th:text="${user.telefone != null ? user.telefone : '-'}"></span>
+										</div>
+									</td>
+
+									<td data-label="Status" class="adminVerProduto-status"><span
+										th:if="${user.isEnable}" class="badge bg-success"> <i
+											class="fas fa-check-circle me-1"></i> Ativo
+									</span> <span th:unless="${user.isEnable}" class="badge bg-danger">
+											<i class="fas fa-times-circle me-1"></i> Inativo
+									</span>
+										<div class="mt-2">
+											<span class="badge bg-secondary"> <i
+												class="fas fa-user-tag me-1"></i> [[${user.role}]]
+											</span>
+										</div></td>
+
+									<td data-label="Ações" class="adminVerProduto-action-buttons">
+										<div class="d-inline-flex flex-wrap gap-1">
+											<a
+												th:href="@{'/admin/atualizarStatus?status=true&id=' + ${user.id} + '&type=' + ${usuariosType}}"
+												class="btn adminVerProduto-btn-edit"> <i
+												class="fas fa-user-edit me-1"></i> Ativo
+											</a> <a
+												th:href="@{'/admin/atualizarStatus?status=false&id=' + ${user.id} + '&type=' + ${usuariosType}}"
+												class="btn adminVerProduto-btn-delete"> <i
+												class="fas fa-user-slash me-1"></i> Inativo
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<nav aria-label="Navegação de página" th:if="${totalPages > 1}">
+				<ul class="pagination justify-content-center mt-4">
+					<li class="page-item"
+						th:classappend="${currentPage == 1} ? 'disabled'"><a
+						class="page-link"
+						th:href="@{${baseUrl} + '?page=' + ${currentPage - 1}}"
+						tabindex="-1">Anterior</a></li>
+					<li th:each="page : ${#numbers.sequence(1, totalPages)}"
+						class="page-item"
+						th:classappend="${page == currentPage} ? 'active'"><a
+						class="page-link" th:href="@{${baseUrl} + '?page=' + ${page}}">[[${page}]]</a>
+					</li>
+					<li class="page-item"
+						th:classappend="${currentPage == totalPages} ? 'disabled'"><a
+						class="page-link"
+						th:href="@{${baseUrl} + '?page=' + ${currentPage + 1}}">Próximo</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+<th:block id="scripts-user-adm">
+	<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- FILTRO DE BUSCA ---
+        const searchInput = document.querySelector('.adminVerProduto-search-bar input');
+        
+        // Verifica se o campo de busca existe na página antes de adicionar o listener
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                const tableRows = document.querySelectorAll('.adminVerProduto-table tbody tr');
+
+                tableRows.forEach(row => {
+                    // CORREÇÃO: A busca agora deve ser feita na segunda coluna (td:nth-child(2)),
+                    // que é a coluna de "Informações de Contato" (Nome, E-mail, Telefone).
+                    const userInfoCell = row.querySelector('td:nth-child(2)');
+                    
+                    if (userInfoCell) {
+                        const userInfoText = userInfoCell.textContent.toLowerCase();
+                        
+                        // Se o texto da célula incluir o termo de busca, mostra a linha. Senão, esconde.
+                        if (userInfoText.includes(searchTerm)) {
+                            row.style.display = ''; // Mostra a linha
+                        } else {
+                            row.style.display = 'none'; // Esconde a linha
+                        }
+                    }
+                });
+            });
+        }
+
+        // --- CONFIRMAÇÃO DE STATUS (Inativo) ---
+        const deleteButtons = document.querySelectorAll('.adminVerProduto-btn-delete');
+        
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function(event) {
+                const confirmation = confirm('Tem certeza que deseja tornar o usuário inativo?');
+                if (!confirmation) {
+                    event.preventDefault(); // Cancela a ação de clique (não segue o link)
+                }
+            });
+        });
+    });
+</script>
+</th:block>
+</body>
+</html>

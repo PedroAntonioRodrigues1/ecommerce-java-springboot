@@ -1,0 +1,291 @@
+
+/* Define o charset do arquivo CSS como UTF-8 */
+@charset "UTF-8";
+/* Define o conjunto de caracteres como UTF-8 para suporte a caracteres especiais */
+
+/* Identificação do arquivo */
+/* /static/css/adminVerProduto.css - VERSÃO FINAL CORRIGIDA */
+
+/* Variáveis CSS globais para consistência no design */
+:root {
+    --admin-bg-light: #f8f9fa;       /* Cor de fundo clara para áreas secundárias */
+    --admin-card-bg: #ffffff;         /* Cor de fundo branca para cards/containers */
+    --admin-text-dark: #212529;       /* Cor principal para texto (preto escuro) */
+    --admin-primary-color: #0d6efd;   /* Azul primário para elementos importantes */
+    --admin-warning-color: #ffc107;   /* Amarelo para alertas/avisos */
+    --admin-warning-hover-color: #e6ac00; /* Cor para hover em elementos de aviso */
+    --admin-danger-color: #dc3545;    /* Vermelho para ações críticas (excluir) */
+    --admin-danger-hover-color: #c82333; /* Vermelho escuro para hover em ações perigosas */
+    --admin-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); /* Sombra suave para elevação de elementos */
+    --admin-border-radius: 0.75rem;   /* Raio padrão para bordas arredondadas */
+}
+
+/* Container principal da página */
+.adminVerProduto-container {
+    background-color: var(--admin-card-bg); /* Fundo branco para todo o conteúdo */
+    color: var(--admin-text-dark);          /* Cor do texto padrão */
+    /* Fonte padrão com fallback para segurança */
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 
+                'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 
+                'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100vh; /* Garante altura mínima igual à viewport */
+
+}
+
+/* Estilo do cabeçalho da seção */
+.adminVerProduto-header {
+    margin-bottom: 2rem; /* Espaçamento inferior generoso */
+}
+
+/* Estilo do ícone no título principal */
+.adminVerProduto-header h1 i {
+    color: var(--admin-primary-color); /* Cor azul para o ícone */
+}
+
+/* Estilo para alertas/mensagens do sistema */
+.adminVerProduto-alert {
+    border-radius: var(--admin-border-radius); /* Borda arredondada */
+    border-left-width: 5px; /* Borda esquerda destacada para ênfase visual */
+    box-shadow: var(--admin-shadow); /* Sombra suave para profundidade */
+    margin-bottom: 1.5rem; /* Espaçamento inferior padrão */
+}
+
+/* Container para cabeçalho com elementos de controle */
+.adminVerProduto-header-content {
+    display: flex; /* Layout flexível para elementos internos */
+    justify-content: space-between; /* Distribuição horizontal com espaçamento */
+    align-items: center; /* Alinhamento vertical centralizado */
+    gap: 1.5rem; /* Espaço entre elementos filhos */
+    margin-bottom: 2rem; /* Espaçamento inferior */
+}
+
+/* Estilo da barra de pesquisa */
+.adminVerProduto-search-bar {
+    display: flex; /* Layout flexível para elementos internos */
+    align-items: center; /* Alinhamento vertical centralizado */
+    background-color: var(--admin-card-bg); /* Fundo branco */
+    border: 1px solid #dee2e6; /* Borda sutil (cor padrão do Bootstrap) */
+    border-radius: var(--admin-border-radius); /* Cantos arredondados */
+    padding: 0.35rem 0.6rem; /* Espaçamento interno compacto */
+    flex-grow: 1; /* Ocupa espaço disponível no container pai */
+    max-width: 450px; /* Largura máxima para telas grandes */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05); /* Sombra leve */
+    transition: all 0.2s ease-in-out; /* Transição suave para efeitos de foco/hover */
+}
+
+/* Efeito quando a barra de pesquisa está em foco */
+.adminVerProduto-search-bar:focus-within {
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25); /* Sombra mais intensa com cor azul */
+    border-color: var(--admin-primary-color); /* Borda azul para destaque */
+}
+
+/* Estilo do campo de input dentro da barra de pesquisa */
+.adminVerProduto-search-bar input {
+    border: none; /* Remove borda padrão */
+    outline: none; /* Remove contorno de foco padrão */
+    width: 100%; /* Ocupa toda a largura disponível */
+    padding: 0.5rem; /* Espaçamento interno confortável */
+    background: transparent; /* Fundo transparente para integração visual */
+    font-size: 1rem; /* Tamanho de fonte padrão */
+}
+
+/* Estilo do botão "Adicionar Produto" */
+.adminVerProduto-add-btn {
+    display: flex; /* Layout flexível para alinhar ícone e texto */
+    align-items: center; /* Alinhamento vertical centralizado */
+    white-space: nowrap; /* Impede quebra de linha no texto */
+    background-color: var(--admin-primary-color); /* Cor de fundo azul */
+    color: white; /* Texto branco para contraste */
+    padding: 0.75rem 1.5rem; /* Espaçamento interno confortável */
+    border-radius: var(--admin-border-radius); /* Cantos arredondados */
+    text-decoration: none; /* Remove sublinhado padrão de links */
+    font-weight: 500; /* Peso de fonte médio */
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3); /* Sombra azulada */
+    transition: all 0.2s ease; /* Transição suave para efeitos de hover */
+}
+
+/* Efeito hover no botão "Adicionar Produto" */
+.adminVerProduto-add-btn:hover {
+    background-color: #0b5ed7; /* Azul mais escuro para feedback visual */
+    color: white; /* Mantém texto branco */
+    transform: translateY(-3px); /* Efeito de levitação sutil */
+    box-shadow: 0 6px 14px rgba(13, 110, 253, 0.35); /* Sombra mais intensa */
+}
+
+/* Estilo do card principal que contém a tabela */
+.adminVerProduto-card {
+    background-color: var(--admin-bg-light); /* Fundo cinza claro */
+    border: 1px solid #e9ecef; /* Borda sutil */
+    border-radius: var(--admin-border-radius); /* Cantos arredondados */
+    box-shadow: var(--admin-shadow); /* Sombra para destaque visual */
+    overflow: hidden; /* Esconde conteúdo que ultrapassar os limites */
+}
+
+/* Cabeçalho do card (título + badges) */
+.adminVerProduto-card-header {
+    display: flex; /* Layout flexível para elementos internos */
+    justify-content: space-between; /* Separa título e elementos de controle */
+    align-items: center; /* Alinhamento vertical centralizado */
+    padding: 1.25rem 1.5rem; /* Espaçamento interno generoso */
+    background-color: transparent; /* Fundo transparente */
+    border-bottom: 1px solid #dee2e6; /* Linha divisória inferior */
+}
+
+/* Estilo do título dentro do cabeçalho do card */
+.adminVerProduto-title {
+    font-size: 1.2rem; /* Tamanho de fonte ligeiramente maior */
+    font-weight: 600; /* Negrito para destaque */
+}
+
+/* Corpo do card (contém a tabela) */
+.adminVerProduto-card-body {
+    padding: 0; /* Remove padding padrão para controle preciso */
+}
+
+/* Estilos gerais da tabela */
+.adminVerProduto-table {
+    vertical-align: middle; /* Alinhamento vertical centralizado nas células */
+}
+
+/* Cabeçalho da tabela */
+.adminVerProduto-table thead {
+    background-color: transparent; /* Remove fundo colorido padrão */
+}
+
+/* Linhas do corpo da tabela */
+.adminVerProduto-table tbody tr {
+    transition: background-color 0.15s ease-in-out; /* Transição suave para hover */
+    background-color: var(--admin-card-bg); /* Fundo branco para linhas */
+}
+
+/* Linha divisória entre linhas (exceto última) */
+.adminVerProduto-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid #eff2f5; /* Linha divisória sutil */
+}
+
+/* Efeito hover nas linhas da tabela */
+.adminVerProduto-table tbody tr:hover {
+    background-color: #fdfdfd; /* Fundo ligeiramente mais claro para feedback visual */
+}
+
+/* Células da tabela (dados e cabeçalhos) */
+.adminVerProduto-table td, .adminVerProduto-table th {
+    padding: 1rem 1.5rem; /* Espaçamento interno generoso */
+}
+
+/* Imagens dentro das células da tabela */
+.adminVerProduto-table td img {
+    border-radius: 8px; /* Cantos levemente arredondados */
+    object-fit: cover; /* Mantém proporção da imagem sem distorção */
+}
+
+/* Container para botões de ação na tabela */
+.adminVerProduto-action-buttons .btn {
+    font-size: 0.875rem; /* Tamanho de fonte reduzido */
+    padding: 0.4rem 0.8rem; /* Padding compacto */
+    border: none; /* Remove borda padrão */
+    font-weight: 500; /* Peso de fonte médio */
+    transition: background-color 0.2s ease; /* Transição suave de cor */
+}
+
+/* Estilo do botão Editar */
+.adminVerProduto-btn-edit {
+    background-color: var(--admin-warning-color); /* Fundo amarelo */
+    color: var(--admin-text-dark); /* Texto escuro para contraste */
+}
+
+/* Efeito hover no botão Editar */
+.adminVerProduto-btn-edit:hover {
+    background-color: var(--admin-warning-hover-color); /* Amarelo mais escuro */
+    color: var(--admin-text-dark); /* Mantém texto escuro */
+}
+
+/* Estilo do botão Excluir */
+.adminVerProduto-btn-delete {
+    background-color: var(--admin-danger-color); /* Fundo vermelho */
+    color: white; /* Texto branco para contraste */
+}
+
+/* Efeito hover no botão Excluir */
+.adminVerProduto-btn-delete:hover {
+    background-color: var(--admin-danger-hover-color); /* Vermelho mais escuro */
+    color: white; /* Mantém texto branco */
+}
+
+/* Estilos para paginação */
+.pagination .page-link {
+    border-radius: 6px; /* Bordas arredondadas */
+    margin: 0 3px; /* Espaçamento entre itens */
+    border-color: #dee2e6; /* Cor da borda (cinza claro) */
+    color: var(--admin-primary-color); /* Cor do texto (azul) */
+}
+
+/* Item ativo da paginação */
+.pagination .page-item.active .page-link {
+    background-color: var(--admin-primary-color); /* Fundo azul */
+    border-color: var(--admin-primary-color); /* Borda azul */
+    color: white; /* Texto branco */
+}
+
+/* Media queries para responsividade em dispositivos menores (até 768px) */
+@media (max-width: 768px) {
+    /* Layout de coluna única para elementos do cabeçalho */
+    .adminVerProduto-header-content {
+        flex-direction: column; /* Empilha elementos verticalmente */
+        align-items: stretch; /* Estica elementos para largura total */
+    }
+    
+    /* Remove borda do container responsivo da tabela */
+    .table-responsive { 
+        border: none; 
+    }
+    
+    /* Oculta cabeçalho da tabela em mobile */
+    .adminVerProduto-table thead { 
+        display: none; 
+    }
+    
+    /* Converte tabela em layout de bloco para mobile */
+    .adminVerProduto-table tbody, 
+    .adminVerProduto-table tr, 
+    .adminVerProduto-table td { 
+        display: block; 
+        width: 100%; 
+    }
+    
+    /* Estilo para cada linha como card independente em mobile */
+    .adminVerProduto-table tr { 
+        /* Mantive seu estilo de card, está ótimo */
+        border-radius: var(--admin-border-radius); 
+        margin-bottom: 1.5rem; 
+        padding: 0.5rem 1rem; /* Ajustei um pouco o padding para melhor encaixe */
+        border: 1px solid #dee2e6; 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Adicionei uma sombra leve */
+    }
+    
+    /* Estilo para células em layout mobile */
+    .adminVerProduto-table td { 
+        padding: 0.85rem 0; /* Aumentei o padding vertical para mais respiro */
+        border: none;
+        border-bottom: 1px solid #f0f0f0; /* Linha divisória sutil entre as células */
+        text-align: right; 
+        position: relative; 
+    }
+
+    /* Remove a borda da última célula de cada card */
+    .adminVerProduto-table tr td:last-child {
+        border-bottom: none;
+    }
+    
+    /* Adiciona rótulos antes do conteúdo das células */
+    .adminVerProduto-table td::before { 
+        content: attr(data-label); /* Usa atributo data-label como conteúdo */
+        position: absolute; 
+        left: 0; 
+        width: 50%; 
+        text-align: left; 
+        font-weight: bold;
+        color: #555; /* Cor um pouco mais suave para o rótulo */
+    }
+}
+ 

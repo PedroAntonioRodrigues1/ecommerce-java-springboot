@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+/* Conteiner Principal */
+.order-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Card de Pedido Individual */
+.order-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    box-shadow: 0 8px 20px rgba(93, 64, 55, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(93, 64, 55, 0.1);
+}
+
+/* Cabeçalho do Card */
+.card-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.order-id-label, .order-date-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #795548;
+    display: block;
+}
+
+.order-id, .order-date {
+    font-weight: 700;
+    color: #5D4037;
+}
+
+/* Corpo do Card */
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.product-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-thumb {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.product-title {
+    font-weight: 700;
+    color: #5D4037;
+    font-size: 1.1rem;
+    display: block;
+}
+
+/* Preço no Card */
+.order-price {
+    text-align: right;
+}
+
+.price-label {
+    font-size: 0.8rem;
+    color: #795548;
+    display: block;
+}
+
+.price-value {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #5D4037;
+}
+
+/* Rodapé e Status */
+.card-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px dashed #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+}
+
+/* Badges de Status */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: #f1f1f1;
+    color: #5D4037;
+}
+
+.status-DELIVERED { background: #E8F5E9; color: #2E7D32; } /* Verde para entregue */
+.status-CANCELED { background: #FFEBEE; color: #C62828; }  /* Vermelho para cancelado */
+.status-IN_PROGRESS, .status-ORDER_RECIVED { background: var(--cor-verde-salvia, #81B29A); color: #ffffff; } /* Amarelo para progresso */
+
+/* Botão "Ver Detalhes" (Estilo Premium Yellow) */
+.btn-detalhes {
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #4E342E;
+    padding: 8px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.btn-detalhes:hover {
+  background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #fff;
+    border-style: solid;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 179, 0, 0.3);
+}
+
+/* Estado Vazio */
+.no-orders-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #795548;
+}
+
+.no-orders i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #FFB300;
+}
+
+@media (max-width: 600px) {
+    .card-body { flex-direction: column; align-items: flex-start; }
+    .order-price { text-align: left; margin-top: 10px; }
+}

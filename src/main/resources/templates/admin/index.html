@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: Layout(~{:: #conteudo-dashboard}, ~{:: #estilos-dashboard}, ~{:: #scripts-dashboard})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    
+    <th:block id="estilos-dashboard">
+        <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+        </th:block>
+</head>
+<body>
+
+    <div id="conteudo-dashboard">
+        <div class="container admin-container">
+            <div class="admin-header">
+                <h1 class="admin-header-title">Dashboard do Administrador</h1>
+                <p class="admin-header-subtitle">Escolha uma das opções abaixo para gerenciar o sistema.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-admin">
+                    <a th:href="@{/admin/addProduto}" class="admin-card-link">
+                        <div class="card card-admin">
+                            <div class="card-body card-body-admin">
+                                <i class="fas fa-plus-circle admin-icon"></i>
+                                <h5 class="admin-card-title">Adicionar Produto</h5>
+                                <p class="admin-card-text">Clique no card para adicionar um novo produto.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4 col-admin">
+                    <a th:href="@{/admin/verProduto}" class="admin-card-link">
+                        <div class="card card-admin">
+                            <div class="card-body card-body-admin">
+                                <i class="fas fa-search admin-icon"></i>
+                                <h5 class="admin-card-title">Ver Produto</h5>
+                                <p class="admin-card-text">Clique no card para visualizar os produtos.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4 col-admin">
+                    <a th:href="@{/admin/orders}" class="admin-card-link">
+                        <div class="card card-admin">
+                            <div class="card-body card-body-admin">
+                                <i class="fas fa-truck admin-icon"></i>
+                                <h5 class="admin-card-title">Envios</h5>
+                                <p class="admin-card-text">Gerenciar os envios e entregas.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4 col-admin">
+                    <a th:href="@{/admin/usuarios?type=1}" class="admin-card-link">
+                        <div class="card card-admin">
+                            <div class="card-body card-body-admin">
+                                <i class="fas fa-users admin-icon"></i>
+                                <h5 class="admin-card-title">Usuários</h5>
+                                <p class="admin-card-text">Gerenciar os usuários cadastrados.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-md-4 col-admin">
+                    <a th:href="@{/admin/usuarios?type=2}" class="admin-card-link">
+                        <div class="card card-admin">
+                            <div class="card-body card-body-admin">
+                                <i class="fas fa-users-cog admin-icon"></i>
+                                <h5 class="admin-card-title">Admins</h5>
+                                <p class="admin-card-text">Gerenciar administradores.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4 col-admin">
+                    <a th:href="@{/admin/add-admin}" class="admin-card-link">
+                        <div class="card card-admin">
+                            <div class="card-body card-body-admin">
+                                <i class="fas fa-user-plus admin-icon"></i>
+                                <h5 class="admin-card-title">Novo Admin</h5>
+                                <p class="admin-card-text">Adicionar um novo administrador.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block id="scripts-dashboard">
+        <script>
+            console.log("Dashboard carregado!");
+        </script>
+    </th:block>
+
+</body>
+</html>

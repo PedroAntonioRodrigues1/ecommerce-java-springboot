@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+/* ====== Container Principal (Visual de Card Premium) ====== */
+.product-detail-view {
+    background: #ffffff;
+    padding: 3rem;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 30px rgba(93, 64, 55, 0.08);
+    margin-top: 2rem;
+}
+
+/* ====== Imagens e Galeria ====== */
+.product-img-view {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f8f8f8;
+    border: 1px solid #f1f1f1;
+}
+
+.product-img-view img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-gallery-view {
+    display: flex;
+    gap: 12px;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-gallery-view img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.product-gallery-view img:hover {
+    border-color: #FFB300;
+    transform: scale(1.05);
+}
+
+/* ====== Informações do Produto ====== */
+.product-info-view {
+    padding-left: 1.5rem;
+}
+
+.product-info-view h1 {
+    font-size: 2.0rem;
+    font-weight:800;
+    color: #5D4037; /* Marrom Terracota */
+    margin-bottom: 0.5rem;
+}
+
+/* ====== Formatação de Preço ====== */
+.product-info-view .price {
+    font-size: 1.5rem; /* Aumentado para dar destaque */
+    font-weight: 700;
+    color: #5D4037;
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -1px; /* Estilo moderno para valores numéricos */
+}
+
+.product-info-view .price small {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #795548;
+    margin-top: 10px; /* Alinha o R$ levemente para baixo */
+}
+
+/* ====== Formatação da Descrição ====== */
+.product-info-view .description {
+    font-size: 1.1rem;
+    line-height: 1.8; /* Mais espaço entre linhas para não cansar a vista */
+    color: #4E342E;
+    margin-bottom: 2.5rem;
+    padding-left: 1.2rem;
+    border-left: 4px solid #FFD54F; /* Detalhe que combina com o botão */
+    background: rgba(255, 213, 79, 0.05); /* Fundo quase imperceptível para destacar o texto */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 0 8px 8px 0;
+}
+/* ====== Botão de Ação (Espelhado da Grade) ====== */
+.btn-add-cart-view {
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #4E342E;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px dashed rgba(255, 255, 255, 0.6);
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-add-cart-view:hover {
+    background: linear-gradient(45deg, #FFD54F, #FFB300);
+    color: #fff;
+    border-style: solid;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 179, 0, 0.3);
+}
+
+/* ====== Detalhes Adicionais ====== */
+.product-additional-view {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.product-additional-view h5 {
+    color: #5D4037;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.product-additional-view p {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-additional-view strong {
+    color: #5D4037;
+}
+
+/* ====== Responsividade ====== */
+@media (max-width: 768px) {
+    .product-detail-view { padding: 1.5rem; }
+    .product-info-view { padding-left: 0; margin-top: 2rem; }
+    .product-info-view h1 { font-size: 1.8rem; }
+    .btn-add-cart-view { max-width: 100%; }
+}
