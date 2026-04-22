@@ -9,6 +9,7 @@
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Funcionalidades](#funcionalidades)
+- [Segurança e Autenticação](#segurança-e-autenticação)
 - [Pré-requisitos](#pré-requisitos)
 - [Configuração e Instalação](#configuração-e-instalação)
 - [Variáveis de Ambiente](#variáveis-de-ambiente)
@@ -19,7 +20,9 @@
 
 ## 📖 Sobre o Projeto
 
-**Conexão dos Retalhos** é uma aplicação web de e-commerce desenvolvida com **Spring Boot**, voltada para a venda de produtos artesanais e sustentáveis feitos de retalhos de tecido. A plataforma oferece uma experiência completa de compra, com área de administração, gestão de pedidos e envio de e-mails transacionais.
+**Conexão dos Retalhos** Desenvolvido para atender o nicho de artesanato exclusivo, o Conexão dos Retalhos é um e-commerce full-stack construído sobre o ecossistema **Spring Boot**. A plataforma gerencia produtos com estoque único, assegurando que cada item seja vendido apenas uma vez. Tecnicamente, o projeto destaca-se por seu sistema de controle de acesso e autenticação, painel administrativo para gestão de inventário e notificações automáticas via e-mail. Com o core do backend consolidado, as próximas etapas de desenvolvimento incluem a integração de APIs de pagamento e serviços de frete para viabilizar a operação logística.
+
+O projeto foi inicializado utilizando o **[Spring Initializr](https://start.spring.io/)**, ferramenta oficial da Spring para geração de projetos com as dependências configuradas.
 
 ---
 
@@ -35,26 +38,80 @@
 | **Build** | Maven |
 | **Utilitários** | Lombok, Apache Commons IO |
 | **Dev** | Spring Boot DevTools |
+| **Inicialização** | [Spring Initializr](https://start.spring.io/) |
 
 ---
 
 ## ✅ Funcionalidades
 
 ### 👤 Usuário (`ROLE_USER`)
-- Cadastro e login de usuários
-- Navegação e busca de produtos
-- Carrinho de compras
+- Cadastro e login com e-mail e senha
+- Navegação e busca de produtos com paginação
+- Carrinho de compras com contador dinâmico
 - Realização e acompanhamento de pedidos
-- Visualização de perfil
+- Visualização e edição de perfil
+- Troca de senha
 
 ### 🛠️ Administrador (`ROLE_ADMIN`)
-- Painel administrativo
-- Gerenciamento de produtos (CRUD)
-- Visualização e gestão de pedidos
+- Painel administrativo exclusivo
+- Gerenciamento de produtos (CRUD completo)
+  - Upload de até **3 imagens por produto**
+  - Busca e paginação de produtos
+  - Ativar/inativar produtos
+- Gerenciamento de pedidos
+  - Listagem paginada e busca por ID de pedido
+  - Atualização de status do pedido
+  - **Envio automático de e-mail** ao cliente a cada mudança de status
 - Gerenciamento de usuários
+  - Listagem separada de `ROLE_USER` e `ROLE_ADMIN`
+  - Ativar/desativar contas de usuário
+- Cadastro de novos administradores
+- Visualização e edição de perfil próprio
 
 ### 📧 E-mail
-- Envio de e-mails transacionais via Gmail SMTP (confirmações de pedido, cadastro, etc.)
+- Envio de e-mails transacionais via Gmail SMTP (notificações de pedido, confirmações, etc.)
+
+---
+
+## 🔐 Segurança e Autenticação
+
+A segurança é gerenciada pelo **Spring Security** com implementações customizadas para atender às regras de negócio da aplicação.
+
+### Autenticação com `UserDetailsService` customizado
+- Login realizado via **e-mail** (`loginEmail`) em vez do username padrão
+- Implementação de `UserDetailsService` (`UserDetailsServiceImpl`) que busca o usuário no banco e retorna um `CustomUser` (implementação de `UserDetails`)
+
+### Controle de Acesso por Roles
+- `/admin/**` → acessível apenas por `ROLE_ADMIN`
+- `/user/**` → acessível apenas por `ROLE_USER`
+- `/**` → público (produtos, home, login, cadastro)
+
+### Handler de Login com Sucesso (`AuthSuccessHandlerImpl`)
+- Redireciona automaticamente após o login com base na role do usuário:
+  - `ROLE_ADMIN` → `/admin/`
+  - `ROLE_USER` → `/` (home)
+
+### Handler de Falha no Login (`AuthFailureHandlerImpl`)
+O sistema possui proteção contra tentativas excessivas de login:
+
+| Situação | Comportamento |
+|----------|---------------|
+| E-mail não cadastrado | Mensagem genérica de credenciais inválidas |
+| Senha incorreta (tentativas < limite) | Incrementa contador de tentativas falhas |
+| Senha incorreta (limite atingido) | **Bloqueia a conta** automaticamente |
+| Conta bloqueada (tempo ainda vigente) | Informa que a conta está bloqueada |
+| Conta bloqueada (tempo expirado) | **Desbloqueia automaticamente** a conta |
+| Conta inativa | Orienta o usuário a verificar o e-mail |
+
+### Gerenciamento de Sessão
+- O Spring Security gerencia as sessões de usuário de forma automática
+- Dados do usuário autenticado são disponibilizados nos templates via `Principal` e `Model`
+- O logout invalida a sessão e está disponível para todos os perfis
+
+### Configurações de Segurança
+- Senhas armazenadas com hash **BCrypt**
+- CSRF desativado (adequado para a arquitetura atual)
+- `DaoAuthenticationProvider` configurado com `UserDetailsService` + `PasswordEncoder`
 
 ---
 
@@ -74,7 +131,7 @@ Antes de começar, certifique-se de ter instalado:
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/vendas.git
+git clone https://github.com/PedroAntonioRodrigues1/ecommerce-java-springboot.git
 cd vendas
 ```
 
@@ -84,11 +141,21 @@ cd vendas
 CREATE DATABASE "loja-retalhos";
 ```
 
-### 3. Configure as variáveis de ambiente
+### 3. Crie a pasta para armazenamento de imagens
 
-Defina as variáveis de ambiente conforme descrito na seção abaixo. Em desenvolvimento, você pode criar um arquivo `.env` ou configurar diretamente no `application.properties`.
+As imagens dos produtos são salvas em uma pasta externa ao projeto. Por padrão, o caminho configurado é:
 
-### 4. Instale as dependências e compile
+```
+C:\conexao-retalhos\imagens\
+```
+
+> Você pode alterar esse caminho em `WebConfig.java`, na propriedade `addResourceLocations`.
+
+### 4. Configure as variáveis de ambiente
+
+Defina as variáveis conforme a seção abaixo.
+
+### 5. Compile e instale as dependências
 
 ```bash
 mvn clean install
@@ -96,21 +163,19 @@ mvn clean install
 
 ---
 
-## 🔐 Variáveis de Ambiente
+## 🔑 Variáveis de Ambiente
 
-Configure as seguintes variáveis de ambiente antes de executar a aplicação:
-
-| Variável | Descrição | Exemplo |
-|----------|-----------|---------|
+| Variável | Descrição | Valor padrão |
+|----------|-----------|--------------|
 | `DB_URL` | URL de conexão com o PostgreSQL | `jdbc:postgresql://localhost:5432/loja-retalhos` |
 | `DB_USER` | Usuário do banco de dados | `postgres` |
-| `DB_PASSWORD` | Senha do banco de dados | `sua_senha` |
-| `MAIL_USER` | E-mail Gmail para envio | `seuemail@gmail.com` |
-| `MAIL_PASSWORD` | Senha de App do Gmail | `xxxx xxxx xxxx xxxx` |
+| `DB_PASSWORD` | Senha do banco de dados | — |
+| `MAIL_USER` | E-mail Gmail para envio | — |
+| `MAIL_PASSWORD` | Senha de App do Gmail | — |
 
-> ⚠️ **Nunca** commite senhas ou credenciais no repositório. Use variáveis de ambiente ou um arquivo `.env` excluído do `.gitignore`.
+> ⚠️ **Nunca** commite senhas ou credenciais no repositório. Use variáveis de ambiente ou um arquivo `.env` excluído via `.gitignore`.
 
-### Exemplo de `.env` (para desenvolvimento local)
+### Exemplo de `.env`
 
 ```env
 DB_URL=jdbc:postgresql://localhost:5432/loja-retalhos
@@ -148,17 +213,29 @@ vendas/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/retalho/vendas/
-│   │   │   ├── controller/       # Controllers MVC
-│   │   │   ├── model/            # Entidades JPA
-│   │   │   ├── repository/       # Repositórios Spring Data
-│   │   │   ├── service/          # Lógica de negócio
-│   │   │   ├── security/         # Configurações Spring Security
-│   │   │   └── VendasApplication.java
+│   │   │   ├── config/               # Segurança (Spring Security)
+│   │   │   │   ├── SecurityConfig.java
+│   │   │   │   ├── CustomUser.java
+│   │   │   │   ├── UserDetailsServiceImpl.java
+│   │   │   │   ├── AuthSucessHandlerImpl.java
+│   │   │   │   ├── AuthFailureHandlerImpl.java
+│   │   │   │   └── WebConfig.java
+│   │   │   ├── controller/           # Controllers MVC
+│   │   │   │   ├── AdminController.java
+│   │   │   │   ├── UserController.java
+│   │   │   │   └── HomeController.java
+│   │   │   ├── model/                # Entidades JPA
+│   │   │   ├── repository/           # Repositórios Spring Data
+│   │   │   ├── service/              # Interfaces de serviço
+│   │   │   │   └── impl/             # Implementações
+│   │   │   └── util/                 # Utilitários (CommonUtil, OrderStatus)
 │   │   └── resources/
-│   │       ├── templates/        # Templates Thymeleaf
-│   │       │   └── layout/       # Layout base (navbar, footer)
-│   │       ├── static/           # CSS, JS, imagens
-│   │       ├── messages.properties
+│   │       ├── templates/            # Templates Thymeleaf
+│   │       │   ├── admin/            # Páginas do painel admin
+│   │       │   ├── user/             # Páginas do usuário
+│   │       │   └── layout/           # Layout base (navbar, footer)
+│   │       ├── static/               # CSS, JS, imagens estáticas
+│   │       ├── messages.properties   # Mensagens i18n (pt_BR)
 │   │       └── application.properties
 │   └── test/
 ├── pom.xml
